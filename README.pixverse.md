@@ -76,3 +76,4 @@ async function processImage(file: File) {
   }
 }
 ```
+
