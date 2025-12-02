@@ -8,9 +8,8 @@ import { isTelegramWebApp } from "@/lib/isTelegram";
 
 interface HistoryItem {
   id: string;
-  type: 'animation' | 'enhancement';
-  url: string;
-  timestamp: number;
+  type: 'animate' | 'enhance';
+  date: string;
 }
 
 export default function HistoryPage() {
@@ -31,9 +30,6 @@ export default function HistoryPage() {
     const loadHistory = () => {
       setIsLoading(true);
       try {
-        // Получаем текущий результат
-        const currentResult = localStorage.getItem('vivaResult');
-        
         // Получаем историю
         const savedHistory = localStorage.getItem('vivaHistory');
         let historyItems: HistoryItem[] = [];
@@ -42,41 +38,18 @@ export default function HistoryPage() {
           historyItems = JSON.parse(savedHistory);
         }
         
-        // Добавляем текущий результат в историю, если он есть
-        if (currentResult) {
-          const result = JSON.parse(currentResult);
-          const newItem: HistoryItem = {
-            id: `item_${Date.now()}`,
-            type: result.type,
-            url: result.url,
-            timestamp: result.timestamp
-          };
-          
-          // Проверяем, нет ли уже такого элемента в истории
-          const exists = historyItems.some(item => 
-            item.url === newItem.url && item.type === newItem.type
-          );
-          
-          if (!exists) {
-            historyItems = [newItem, ...historyItems];
-            localStorage.setItem('vivaHistory', JSON.stringify(historyItems));
-          }
-        }
-        
         // Для демонстрации, если история пуста, добавляем демо-элементы
         if (historyItems.length === 0) {
           const demoItems: HistoryItem[] = [
             {
               id: 'demo1',
-              type: 'animation',
-              url: '/demo-animation.mp4',
-              timestamp: Date.now() - 86400000 // вчера
+              type: 'animate',
+              date: new Date(Date.now() - 86400000).toISOString() // вчера
             },
             {
               id: 'demo2',
-              type: 'enhancement',
-              url: '/demo-enhanced.jpg',
-              timestamp: Date.now() - 172800000 // позавчера
+              type: 'enhance',
+              date: new Date(Date.now() - 172800000).toISOString() // позавчера
             }
           ];
           historyItems = demoItems;
@@ -102,8 +75,8 @@ export default function HistoryPage() {
   }, [setupBackButton, router]);
 
   // Функция для форматирования даты
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     return date.toLocaleString('ru-RU', {
       day: '2-digit',
       month: '2-digit',
@@ -115,15 +88,12 @@ export default function HistoryPage() {
 
   // Функция для просмотра элемента истории
   const viewHistoryItem = (item: HistoryItem) => {
-    // Сохраняем выбранный элемент как текущий результат
-    localStorage.setItem('vivaResult', JSON.stringify({
-      type: item.type,
-      url: item.url,
-      timestamp: item.timestamp
-    }));
-    
-    // Переходим на страницу результата
-    router.push('/result');
+    // Переходим на соответствующую страницу результата
+    if (item.type === 'animate') {
+      router.push(`/result/animate?id=${item.id}`);
+    } else {
+      router.push(`/result/enhance?id=${item.id}`);
+    }
   };
 
   // Функция для очистки истории
@@ -177,7 +147,7 @@ export default function HistoryPage() {
               >
                 <div className="flex items-center">
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-primary-900/30 mr-3 flex-shrink-0">
-                    {item.type === 'animation' ? (
+                    {item.type === 'animate' ? (
                       <div className="w-full h-full flex items-center justify-center bg-primary-900/50">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary-400" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -193,10 +163,10 @@ export default function HistoryPage() {
                   </div>
                   <div>
                     <p className="font-medium">
-                      {item.type === 'animation' ? 'Анимация' : 'Улучшение'}
+                      {item.type === 'animate' ? 'Анимация' : 'Улучшение'}
                     </p>
                     <p className="text-sm text-gray-400">
-                      {formatDate(item.timestamp)}
+                      {formatDate(item.date)}
                     </p>
                   </div>
                 </div>

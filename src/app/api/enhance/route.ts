@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { getAuthHeader } from "@/services/didClient";
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import fs from 'fs';
 import { writeFile } from 'fs/promises';
 import { mkdir } from 'fs/promises';
 
-// Обработчик для загрузки файла и отправки в D-ID API
+// Обработчик для улучшения изображения
 export async function POST(req: Request) {
   try {
     // Получаем FormData с файлом
@@ -43,36 +42,18 @@ export async function POST(req: Request) {
     // URL для доступа к файлу
     const fileUrl = `/uploads/${fileName}`;
     
-    // Отправляем запрос в D-ID API
-    const response = await fetch("https://api.d-id.com/v1/talks", {
-      method: "POST",
-      headers: {
-        "Authorization": getAuthHeader(),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        source_url: `${process.env.NEXT_PUBLIC_HOST || 'http://localhost:3000'}${fileUrl}`,
-        script: {
-          type: "text",
-          input: "Hello! I'm alive!",
-        },
-        // можно добавить конфиг при желании:
-        // config: { stitch: true }
-      }),
-    });
-    
-    const json = await response.json();
+    // В реальном приложении здесь будет вызов API для улучшения изображения
+    // Для демонстрации просто сохраняем информацию о задаче
     
     // Сохраняем информацию о задаче
     const taskInfo = {
       id: taskId,
-      did_id: json.id, // ID задачи в D-ID API
       file_url: fileUrl,
-      status: 'created',
+      enhanced_url: fileUrl, // В реальном приложении здесь будет URL улучшенного изображения
+      status: 'processing', // Имитируем обработку
       created_at: new Date().toISOString()
     };
     
-    // В реальном приложении здесь будет сохранение в БД
     // Для демонстрации сохраняем в файл
     const tasksDir = path.join(process.cwd(), "public/tasks");
     try {
@@ -86,9 +67,23 @@ export async function POST(req: Request) {
       JSON.stringify(taskInfo)
     );
     
+    // Имитируем асинхронную обработку
+    setTimeout(async () => {
+      try {
+        // Обновляем статус задачи
+        taskInfo.status = 'done';
+        await writeFile(
+          path.join(tasksDir, `${taskId}.json`),
+          JSON.stringify(taskInfo)
+        );
+      } catch (error) {
+        console.error("Error updating task status:", error);
+      }
+    }, 5000); // Задержка в 5 секунд для имитации обработки
+    
     return NextResponse.json({ id: taskId }, { status: 200 });
   } catch (err: any) {
-    console.error("Error in /api/did/animate:", err);
+    console.error("Error in /api/enhance:", err);
     return NextResponse.json(
       { error: err.message },
       { status: 500 }

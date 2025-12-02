@@ -37,7 +37,12 @@ export default function UploadPage() {
     if (!isTelegramWebApp()) return;
     
     if (preview) {
-      setupMainButton("Оживить фото", true, true, handleProcess);
+      setupMainButton(
+        processingType === 'animate' ? "Оживить фото" : "Улучшить фото", 
+        true, 
+        true, 
+        processingType === 'animate' ? handleAnimate : handleEnhance
+      );
     } else {
       setupMainButton("Выберите фото", false);
     }
@@ -45,7 +50,7 @@ export default function UploadPage() {
     return () => {
       setupMainButton("", false);
     };
-  }, [preview, setupMainButton]);
+  }, [preview, processingType, setupMainButton]);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -61,44 +66,73 @@ export default function UploadPage() {
     setPreview(URL.createObjectURL(file));
   }
 
-  async function handleProcess() {
+  const handleAnimate = async () => {
     if (!selectedFile) return;
     
     try {
       setIsLoading(true);
       showMainButtonLoader(true);
       
-      // Используем D-ID API для обработки изображения
-      if (processingType === 'animate') {
-        // Шаг 1: Загрузка изображения
-        const imageUrl = await uploadImage(selectedFile);
-        
-        // Шаг 2: Создание анимации
-        const taskId = await createAnimation(imageUrl);
-        
-        // Шаг 3: Ожидание результата (polling)
-        const videoUrl = await pollUntilDone(taskId);
-        
-        // Сохраняем результат в localStorage
-        localStorage.setItem('resultVideo', videoUrl);
-      } else {
-        // В демо-версии для улучшения используем заглушку
-        // В реальном приложении здесь будет вызов API для улучшения
-        setTimeout(() => {
-          localStorage.setItem('resultVideo', '/demo-enhanced.jpg');
-        }, 1500);
-      }
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const res = await fetch("/api/did/animate", { method: "POST", body: formData });
+      const data = await res.json();
+
+      // Сохраняем в историю
+      const historyItem = {
+        type: "animate",
+        id: data.id,
+        date: new Date().toISOString()
+      };
       
-      // Переходим на страницу результата
-      router.push("/result");
+      // Сохраняем в localStorage
+      const history = JSON.parse(localStorage.getItem('vivaHistory') || '[]');
+      localStorage.setItem('vivaHistory', JSON.stringify([historyItem, ...history]));
+      
+      router.push(`/result/animate?id=${data.id}`);
     } catch (error) {
-      console.error('Error processing image:', error);
+      console.error('Error animating image:', error);
       showAlert("Произошла ошибка при обработке изображения. Попробуйте еще раз.");
     } finally {
       setIsLoading(false);
       showMainButtonLoader(false);
     }
-  }
+  };
+
+  const handleEnhance = async () => {
+    if (!selectedFile) return;
+    
+    try {
+      setIsLoading(true);
+      showMainButtonLoader(true);
+      
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const res = await fetch("/api/enhance", { method: "POST", body: formData });
+      const data = await res.json();
+      
+      // Сохраняем в историю
+      const historyItem = {
+        type: "enhance",
+        id: data.id,
+        date: new Date().toISOString()
+      };
+      
+      // Сохраняем в localStorage
+      const history = JSON.parse(localStorage.getItem('vivaHistory') || '[]');
+      localStorage.setItem('vivaHistory', JSON.stringify([historyItem, ...history]));
+      
+      router.push(`/result/enhance?id=${data.id}`);
+    } catch (error) {
+      console.error('Error enhancing image:', error);
+      showAlert("Произошла ошибка при улучшении изображения. Попробуйте еще раз.");
+    } finally {
+      setIsLoading(false);
+      showMainButtonLoader(false);
+    }
+  };
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-dark-200 to-dark-300 relative">
@@ -175,7 +209,7 @@ export default function UploadPage() {
             </div>
             
             <button 
-              onClick={handleProcess}
+              onClick={processingType === 'animate' ? handleAnimate : handleEnhance}
               disabled={isLoading || isProcessing}
               className="w-full gradient-bg hover:opacity-90 transition-all text-center py-4 rounded-xl text-lg font-medium shadow-lg disabled:opacity-70 flex items-center justify-center"
             >

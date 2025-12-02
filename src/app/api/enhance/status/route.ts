@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getAuthHeader } from "@/services/didClient";
 import path from 'path';
 import fs from 'fs';
 import { promises as fsPromises } from 'fs';
@@ -25,43 +24,14 @@ export async function GET(req: Request) {
     const taskInfoRaw = await fsPromises.readFile(taskFilePath, 'utf-8');
     const taskInfo = JSON.parse(taskInfoRaw);
     
-    // Получаем статус задачи из D-ID API
-    const url = `https://api.d-id.com/v1/talks/${taskInfo.did_id}`;
-    
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Authorization": getAuthHeader(),
-      },
-    });
-    
-    if (!response.ok) {
-      return NextResponse.json(
-        { status: 'error', error: `API Error: ${response.status}` },
-        { status: response.status }
-      );
-    }
-    
-    const didResponse = await response.json();
-    
-    // Обновляем статус в файле
-    taskInfo.status = didResponse.status;
-    
-    if (didResponse.result?.video_url) {
-      taskInfo.video_url = didResponse.result.video_url;
-    }
-    
-    // Сохраняем обновленную информацию
-    await fsPromises.writeFile(taskFilePath, JSON.stringify(taskInfo));
-    
     // Возвращаем статус клиенту
     return NextResponse.json({
-      status: didResponse.status,
-      video_url: didResponse.result?.video_url,
-      error: didResponse.error
+      status: taskInfo.status,
+      image_url: taskInfo.enhanced_url || taskInfo.file_url,
+      error: taskInfo.error
     });
   } catch (err: any) {
-    console.error("Error checking status:", err);
+    console.error("Error checking enhance status:", err);
     return NextResponse.json(
       { status: 'error', error: err.message },
       { status: 500 }
