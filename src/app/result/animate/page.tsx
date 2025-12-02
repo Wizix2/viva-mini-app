@@ -8,7 +8,9 @@ import { isTelegramWebApp } from "@/lib/isTelegram";
 
 interface StatusResponse {
   status: 'created' | 'processing' | 'done' | 'error';
-  video_url?: string;
+  result?: {
+    video_url?: string;
+  };
   error?: string;
 }
 
@@ -109,7 +111,7 @@ export default function AnimateResultPage() {
 
         <div className="rounded-xl overflow-hidden shadow-lg mb-6 bg-black/30">
           {/* Результат обработки */}
-          {status?.status === 'done' && status.video_url ? (
+          {status?.status === 'done' && status.result?.video_url ? (
             <div className="aspect-square w-full bg-primary-900/30">
               <video 
                 className="w-full h-full object-contain" 
@@ -119,7 +121,7 @@ export default function AnimateResultPage() {
                 playsInline
                 controls
               >
-                <source src={status.video_url} type="video/mp4" />
+                <source src={status.result.video_url} type="video/mp4" />
                 Ваш браузер не поддерживает видео.
               </video>
             </div>

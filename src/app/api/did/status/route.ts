@@ -1,70 +1,28 @@
 import { NextResponse } from "next/server";
-import { getAuthHeader } from "@/services/didClient";
-import path from 'path';
-import fs from 'fs';
-import { promises as fsPromises } from 'fs';
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
+export const runtime = "nodejs";
 
-  if (!id) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
-  }
-
+export async function GET(request: Request) {
   try {
-    // Получаем информацию о задаче из файла
-    const taskFilePath = path.join(process.cwd(), "public/tasks", `${id}.json`);
-    
-    // Проверяем существование файла
-    if (!fs.existsSync(taskFilePath)) {
-      return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing id" }, { status: 400 });
     }
-    
-    // Читаем информацию о задаче
-    const taskInfoRaw = await fsPromises.readFile(taskFilePath, 'utf-8');
-    const taskInfo = JSON.parse(taskInfoRaw);
-    
-    // Получаем статус задачи из D-ID API
-    const url = `https://api.d-id.com/v1/talks/${taskInfo.did_id}`;
-    
-    const response = await fetch(url, {
-      method: "GET",
+
+    const auth = Buffer.from(process.env.DID_API_KEY!).toString("base64");
+
+    const statusRes = await fetch(`https://api.d-id.com/talks/${id}`, {
       headers: {
-        "Authorization": getAuthHeader(),
-      },
+        "Authorization": `Basic ${auth}`,
+      }
     });
-    
-    if (!response.ok) {
-      return NextResponse.json(
-        { status: 'error', error: `API Error: ${response.status}` },
-        { status: response.status }
-      );
-    }
-    
-    const didResponse = await response.json();
-    
-    // Обновляем статус в файле
-    taskInfo.status = didResponse.status;
-    
-    if (didResponse.result?.video_url) {
-      taskInfo.video_url = didResponse.result.video_url;
-    }
-    
-    // Сохраняем обновленную информацию
-    await fsPromises.writeFile(taskFilePath, JSON.stringify(taskInfo));
-    
-    // Возвращаем статус клиенту
-    return NextResponse.json({
-      status: didResponse.status,
-      video_url: didResponse.result?.video_url,
-      error: didResponse.error
-    });
-  } catch (err: any) {
-    console.error("Error checking status:", err);
-    return NextResponse.json(
-      { status: 'error', error: err.message },
-      { status: 500 }
-    );
+
+    const statusJson = await statusRes.json();
+
+    return NextResponse.json(statusJson);
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
   }
 }

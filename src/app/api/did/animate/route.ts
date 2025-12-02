@@ -1,97 +1,57 @@
 import { NextResponse } from "next/server";
-import { getAuthHeader } from "@/services/didClient";
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
-import fs from 'fs';
-import { writeFile } from 'fs/promises';
-import { mkdir } from 'fs/promises';
 
-// Обработчик для загрузки файла и отправки в D-ID API
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   try {
-    // Получаем FormData с файлом
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    
+
     if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    // Создаем уникальный ID для задачи
-    const taskId = uuidv4();
-    
-    // Создаем директорию для загрузки, если её нет
-    const uploadDir = path.join(process.cwd(), "public/uploads");
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (err) {
-      // Директория уже существует или ошибка создания
-      console.error("Error creating upload directory:", err);
-    }
-    
-    // Получаем расширение файла
-    const fileExtension = file.name.split('.').pop() || 'jpg';
-    
-    // Создаем путь для сохранения файла
-    const fileName = `${taskId}.${fileExtension}`;
-    const filePath = path.join(uploadDir, fileName);
-    
-    // Сохраняем файл
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(filePath, fileBuffer);
-    
-    // URL для доступа к файлу
-    const fileUrl = `/uploads/${fileName}`;
-    
-    // Отправляем запрос в D-ID API
-    const response = await fetch("https://api.d-id.com/v1/talks", {
+    // Формируем base64 для Basic Auth
+    const apiKey = process.env.DID_API_KEY!; 
+    const auth = Buffer.from(apiKey).toString("base64");
+
+    // Загружаем фото в D-ID (новый upload endpoint)
+    const uploadRes = await fetch("https://api.d-id.com/images", {
       method: "POST",
       headers: {
-        "Authorization": getAuthHeader(),
+        "Authorization": `Basic ${auth}`,
+      },
+      body: file
+    });
+
+    const uploadJson = await uploadRes.json();
+    if (!uploadJson.id) {
+      console.error("Upload error:", uploadJson);
+      return NextResponse.json({ error: "Upload failed", details: uploadJson }, { status: 500 });
+    }
+
+    // Теперь создаем Talking Portrait
+    const createRes = await fetch("https://api.d-id.com/talks", {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${auth}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        source_url: `${process.env.NEXT_PUBLIC_HOST || 'http://localhost:3000'}${fileUrl}`,
+        source_url: `https://api.d-id.com/images/${uploadJson.id}`,
         script: {
           type: "text",
-          input: "Hello! I'm alive!",
+          input: "Hello! Your photo is now animated!",
         },
-        // можно добавить конфиг при желании:
-        // config: { stitch: true }
       }),
     });
-    
-    const json = await response.json();
-    
-    // Сохраняем информацию о задаче
-    const taskInfo = {
-      id: taskId,
-      did_id: json.id, // ID задачи в D-ID API
-      file_url: fileUrl,
-      status: 'created',
-      created_at: new Date().toISOString()
-    };
-    
-    // В реальном приложении здесь будет сохранение в БД
-    // Для демонстрации сохраняем в файл
-    const tasksDir = path.join(process.cwd(), "public/tasks");
-    try {
-      await mkdir(tasksDir, { recursive: true });
-    } catch (err) {
-      console.error("Error creating tasks directory:", err);
-    }
-    
-    await writeFile(
-      path.join(tasksDir, `${taskId}.json`),
-      JSON.stringify(taskInfo)
-    );
-    
-    return NextResponse.json({ id: taskId }, { status: 200 });
-  } catch (err: any) {
-    console.error("Error in /api/did/animate:", err);
-    return NextResponse.json(
-      { error: err.message },
-      { status: 500 }
-    );
+
+    const createJson = await createRes.json();
+    console.log("Create response:", createJson);
+
+    return NextResponse.json({ id: createJson.id });
+  } catch (e) {
+    console.error("ANIMATE ERROR:", e);
+    return NextResponse.json({ error: String(e) }, { status: 500 });
   }
 }
