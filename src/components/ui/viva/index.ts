@@ -18,3 +18,6 @@ export { default as VivaUploadPanel } from './VivaUploadPanel';
 // Content display components
 export { default as VivaMediaCard } from './VivaMediaCard';
 export { default as VivaScrollablePanel } from './VivaScrollablePanel';
+
+// Design system
+export { default as VivaThemeDemo } from './VivaThemeDemo';
