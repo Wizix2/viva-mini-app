@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { Layout } from "@/components/viva";
+import { Layout, SkeletonHistoryItem, EmptyState } from "@/components/viva";
 
 interface HistoryItem {
   id: string;
@@ -133,8 +133,10 @@ export default function HistoryPage() {
     <Layout title="История" showBackButton={true}>
       <div className="mt-6 mb-24">
         {isLoading ? (
-          <div className="flex justify-center py-10">
-            <div className="w-12 h-12 rounded-full border-4 border-primary-500 border-t-transparent animate-spin"></div>
+          <div className="space-y-5">
+            {[...Array(6)].map((_, index) => (
+              <SkeletonHistoryItem key={`skeleton-${index}`} />
+            ))}
           </div>
         ) : history.length > 0 ? (
           <>
@@ -172,15 +174,19 @@ export default function HistoryPage() {
             </div>
           </>
         ) : (
-          <div className="premium-card p-10 text-center rounded-2xl">
-            <div className="w-20 h-20 rounded-full bg-dark-300 flex items-center justify-center mx-auto mb-6">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
+          <EmptyState 
+            title="История пуста" 
+            description="Здесь будут отображаться ваши генерации"
+            icon={
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
               </svg>
-            </div>
-            <p className="text-white font-medium text-xl">История пуста</p>
-            <p className="text-sm text-gray-400 mt-3">Здесь будут отображаться ваши генерации</p>
-          </div>
+            }
+            action={{
+              label: "Создать эффект",
+              onClick: () => router.push("/upload")
+            }}
+          />
         )}
       </div>
     </Layout>

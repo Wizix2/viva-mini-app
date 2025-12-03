@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import { Layout } from "@/components/viva";
+import { Layout, SkeletonResultPreview, ErrorState } from "@/components/viva";
 
 interface StatusResponse {
   status: 'created' | 'processing' | 'done' | 'error';
@@ -19,6 +19,7 @@ export default function AnimateResultPage() {
   const [isSharing, setIsSharing] = useState(false);
   const [status, setStatus] = useState<StatusResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { shareContent, setupMainButton, showAlert } = useTelegram();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,8 +42,9 @@ export default function AnimateResultPage() {
         if (data.status === 'created' || data.status === 'processing') {
           setTimeout(check, 3000);
         }
-      } catch (error) {
-        console.error("Error checking status:", error);
+      } catch (err) {
+        console.error("Error checking status:", err);
+        setError(err instanceof Error ? err.message : "Failed to check status");
       } finally {
         setIsLoading(false);
       }
@@ -102,51 +104,65 @@ export default function AnimateResultPage() {
   return (
     <Layout title="Анимация" showBackButton={true}>
       <div className="mt-6 mb-24">
-        <div className="premium-card p-5 mb-6 rounded-2xl">
-          <h2 className="text-xl font-bold text-white mb-2">Результат анимации</h2>
-          <p className="text-gray-300 mb-5">
-            {status?.status === 'done' 
-              ? "Ваше фото успешно оживлено с помощью ИИ" 
-              : "Произошла ошибка при обработке"}
-          </p>
-
-          <div className="rounded-2xl overflow-hidden shadow-card mb-5">
-            {/* Video result */}
-            {status?.status === 'done' && status.result?.video_url ? (
-              <div className="aspect-video w-full bg-dark-300">
-                <video 
-                  className="w-full h-full object-contain" 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  controls
-                >
-                  <source src={status.result.video_url} type="video/mp4" />
-                  Ваш браузер не поддерживает видео.
-                </video>
-              </div>
-            ) : (
-              <div className="aspect-video w-full flex items-center justify-center bg-dark-300">
-                <div className="text-center p-6">
-                  <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <p className="text-red-300">Ошибка при обработке</p>
-                  <p className="text-sm text-gray-400 mt-2">{status?.error || "Попробуйте загрузить фото снова"}</p>
-                </div>
-              </div>
-            )}
+        {isLoading ? (
+          <SkeletonResultPreview />
+        ) : error || status?.status === 'error' ? (
+          <div className="mb-6">
+            <ErrorState 
+              message={error || status?.error || "Не удалось создать эффект"} 
+              action={{ 
+                label: "Попробовать снова", 
+                onClick: () => router.push("/upload") 
+              }}
+            />
           </div>
-
-          <div className="text-center mb-6">
-            <p className="text-sm text-gray-400">
-              ID задачи: {id || "Не указан"}
+        ) : (
+          <div className="premium-card p-5 mb-6 rounded-2xl">
+            <h2 className="text-xl font-bold text-white mb-2">Результат анимации</h2>
+            <p className="text-gray-300 mb-5">
+              {status?.status === 'done' 
+                ? "Ваше фото успешно оживлено с помощью ИИ" 
+                : "Произошла ошибка при обработке"}
             </p>
+
+            <div className="rounded-2xl overflow-hidden shadow-card mb-5">
+              {/* Video result */}
+              {status?.status === 'done' && status.result?.video_url ? (
+                <div className="aspect-video w-full bg-dark-300">
+                  <video 
+                    className="w-full h-full object-contain" 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline
+                    controls
+                  >
+                    <source src={status.result.video_url} type="video/mp4" />
+                    Ваш браузер не поддерживает видео.
+                  </video>
+                </div>
+              ) : (
+                <div className="aspect-video w-full flex items-center justify-center bg-dark-300">
+                  <div className="text-center p-6">
+                    <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <p className="text-red-300">Ошибка при обработке</p>
+                    <p className="text-sm text-gray-400 mt-2">{status?.error || "Попробуйте загрузить фото снова"}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="text-center mb-6">
+              <p className="text-sm text-gray-400">
+                ID задачи: {id || "Не указан"}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         
         {/* Action buttons */}
         <div className="grid grid-cols-2 gap-5">

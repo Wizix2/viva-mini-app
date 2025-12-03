@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
 import { ArtlistModel, MODEL_DESCRIPTIONS } from "@/types/artlist";
-import { Layout } from "@/components/viva";
+import { Layout, ErrorState, ConfirmModal } from "@/components/viva";
 
 export default function UploadPage() {
   const searchParams = useSearchParams();
@@ -16,6 +16,8 @@ export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedModel, setSelectedModel] = useState<ArtlistModel>('veo');
   const [prompt, setPrompt] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   
   const router = useRouter();
   const { setupMainButton, showMainButtonLoader, showAlert } = useTelegram();
@@ -55,10 +57,12 @@ export default function UploadPage() {
     
     // Проверка размера файла (макс. 10 МБ)
     if (file.size > 10 * 1024 * 1024) {
+      setError("Файл слишком большой. Максимальный размер - 10 МБ");
       showAlert("Файл слишком большой. Максимальный размер - 10 МБ");
       return;
     }
     
+    setError(null);
     setSelectedFile(file);
     setPreview(URL.createObjectURL(file));
   }
@@ -120,9 +124,11 @@ export default function UploadPage() {
       
       // Redirect to result page
       router.push(`/result/video?id=${generateData.taskId}`);
-    } catch (error) {
-      console.error('Error generating video:', error);
-      showAlert(error instanceof Error ? error.message : "Произошла ошибка при создании видео. Попробуйте еще раз.");
+    } catch (err) {
+      console.error('Error generating video:', err);
+      const errorMessage = err instanceof Error ? err.message : "Произошла ошибка при создании видео. Попробуйте еще раз.";
+      setError(errorMessage);
+      showAlert(errorMessage);
     } finally {
       setIsLoading(false);
       showMainButtonLoader(false);
@@ -164,6 +170,12 @@ export default function UploadPage() {
   return (
     <Layout title={getEffectTitle()} showBackButton={true}>
       <div className="mt-6 mb-24">
+        {error && (
+          <div className="mb-4">
+            <ErrorState message={error} action={{ label: "Закрыть", onClick: () => setError(null) }} />
+          </div>
+        )}
+        
         {!preview ? (
           <label className="block w-full border-2 border-dashed border-primary-500/50 rounded-2xl p-8 text-center cursor-pointer hover:border-primary-500 transition-all duration-300 bg-dark-100">
             <div className="flex flex-col items-center">
@@ -182,10 +194,7 @@ export default function UploadPage() {
             <div className="relative rounded-2xl overflow-hidden shadow-card bg-dark-100">
               <img src={preview} className="w-full h-auto" alt="Preview" />
               <button 
-                onClick={() => {
-                  setPreview(null);
-                  setSelectedFile(null);
-                }} 
+                onClick={() => setShowConfirmModal(true)} 
                 className="absolute top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-black/70 transition-all duration-300"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -299,6 +308,22 @@ export default function UploadPage() {
           </div>
         )}
       </div>
+      
+      {/* Confirm Modal */}
+      <ConfirmModal
+        open={showConfirmModal}
+        title="Удалить фото?"
+        description="Вы уверены, что хотите удалить выбранное фото? Все изменения будут потеряны."
+        confirmText="Удалить"
+        cancelText="Отмена"
+        danger={true}
+        onConfirm={() => {
+          setPreview(null);
+          setSelectedFile(null);
+          setShowConfirmModal(false);
+        }}
+        onCancel={() => setShowConfirmModal(false)}
+      />
     </Layout>
   );
 }

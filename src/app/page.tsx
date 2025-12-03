@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import { Layout, EffectCard, FAB } from "@/components/viva";
+import { Layout, EffectCard, FAB, SkeletonEffectCard } from "@/components/viva";
 
 // Define effect cards
 const effectCards = [
@@ -19,6 +19,7 @@ const effectCards = [
 
 export default function Home() {
   const { setupMainButton } = useTelegram();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isTelegramWebApp()) return;
@@ -30,20 +31,39 @@ export default function Home() {
       setupMainButton("", false);
     };
   }, [setupMainButton]);
+  
+  // Simulate loading state for demonstration
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Layout>
       <div className="mt-6 mb-24">
         {/* Grid of effect cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
-          {effectCards.map((card) => (
-            <EffectCard
-              key={card.href}
-              icon={card.icon}
-              title={card.title}
-              href={card.href}
-            />
-          ))}
+          {loading ? (
+            // Skeleton loaders while loading
+            <>
+              {[...Array(4)].map((_, index) => (
+                <SkeletonEffectCard key={`skeleton-${index}`} />
+              ))}
+            </>
+          ) : (
+            // Actual effect cards when loaded
+            effectCards.map((card) => (
+              <EffectCard
+                key={card.href}
+                icon={card.icon}
+                title={card.title}
+                href={card.href}
+              />
+            ))
+          )}
         </div>
       </div>
 
