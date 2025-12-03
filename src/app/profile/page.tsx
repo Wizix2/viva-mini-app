@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/viva/Layout";
 
 export default function ProfilePage() {
   const { user, showAlert } = useTelegram();

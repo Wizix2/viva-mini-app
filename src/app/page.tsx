@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import Layout from "@/components/layout/Layout";
-import EffectCard from "@/components/EffectCard";
-import FAB from "@/components/FAB";
+import Layout from "@/components/viva/Layout";
+import EffectCard from "@/components/viva/EffectCard";
+import FAB from "@/components/viva/FAB";
 
 // Define effect cards
 const effectCards = [

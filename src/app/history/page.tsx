@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/viva/Layout";
 
 interface HistoryItem {
   id: string;

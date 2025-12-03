@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
 import { ArtlistStatusResponse, MODEL_DESCRIPTIONS } from "@/types/artlist";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/viva/Layout";
 
 export default function VideoResultPage() {
   const [isSharing, setIsSharing] = useState(false);
