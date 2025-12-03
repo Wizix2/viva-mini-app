@@ -26,3 +26,7 @@ export { default as VivaThemeDemo } from './VivaThemeDemo';
 export { default as ModelCard } from './model-card';
 export { default as ModelGrid } from './model-grid';
 export { default as ModelSelect } from './model-select';
+
+// Mode switching
+export { default as ModeSwitcher } from './mode-switcher';
+export type { GenerationMode } from './mode-switcher';

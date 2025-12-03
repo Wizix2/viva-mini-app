@@ -4,21 +4,18 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Fire, Zap, Lightbulb } from "lucide-react";
 import {
-  VivaTabSwitcher,
   VivaResolutionSelect,
   VivaDurationSelect,
-  VivaUploadPanel,
   VivaScrollablePanel,
   VivaMediaCard,
   VivaCreditsBadge,
-  ModelSelect
+  ModelSelect,
+  ModeSwitcher,
+  GenerationMode
 } from "@/components/ui/viva";
 
-type TabType = "text-to-image" | "image-to-image" | "text-to-video" | "image-to-video";
-
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabType>("text-to-image");
-  const [prompt, setPrompt] = useState("");
+  const [activeMode, setActiveMode] = useState<GenerationMode>("textToImage");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedResolution, setSelectedResolution] = useState("");
   const [selectedDuration, setSelectedDuration] = useState("");
@@ -34,7 +31,7 @@ export default function Home() {
     else if (selectedResolution === "1080p") cost += 50;
     
     // Add cost based on duration for videos
-    if (activeTab.includes("video")) {
+    if (activeMode.includes("Video")) {
       if (selectedDuration === "long") cost += 100;
       else if (selectedDuration === "medium") cost += 50;
     }
@@ -85,7 +82,10 @@ export default function Home() {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <VivaTabSwitcher onTabChange={(tab) => setActiveTab(tab as TabType)} />
+        <ModeSwitcher 
+          onModeChange={(mode) => setActiveMode(mode)}
+          initialMode="textToImage"
+        />
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -93,73 +93,6 @@ export default function Home() {
           variants={itemVariants}
           className="lg:col-span-2 space-y-6"
         >
-          {/* Input Area - Glass Container */}
-          <div className="bg-black/30 backdrop-blur-2xl rounded-[20px] border border-white/10 p-8 shadow-lg">
-            <AnimatePresence mode="wait">
-              {(activeTab === "text-to-image" || activeTab === "text-to-video") ? (
-                <motion.div
-                  key="prompt-area"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="flex items-center mb-4">
-                    <Lightbulb className="w-5 h-5 text-yellow-400 mr-2" />
-                    <h2 className="text-xl font-medium text-white">Prompt</h2>
-                  </div>
-                  
-                  <textarea
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Describe what you want to create..."
-                    className="w-full h-40 bg-black/30 border border-white/10 rounded-xl p-5 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-yellow-400/50 focus:border-yellow-400/50 text-lg"
-                  />
-                  
-                  <div className="mt-5">
-                    <h3 className="text-sm font-medium text-white/70 mb-3">Prompt suggestions</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        "Portrait photo", 
-                        "Landscape", 
-                        "Cyberpunk", 
-                        "Fantasy", 
-                        "Realistic", 
-                        "Abstract",
-                        "Cinematic",
-                        "Neon"
-                      ].map((tag) => (
-                        <motion.button
-                          key={tag}
-                          whileHover={{ scale: 1.05, backgroundColor: "rgba(245, 215, 66, 0.2)" }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => setPrompt(prompt ? `${prompt}, ${tag}` : tag)}
-                          className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-full text-sm text-white/80 border border-white/5 transition-all duration-200"
-                        >
-                          {tag}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="upload-area"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="min-h-[300px] flex flex-col"
-                >
-                  <div className="flex items-center mb-4">
-                    <Zap className="w-5 h-5 text-yellow-400 mr-2" />
-                    <h2 className="text-xl font-medium text-white">Reference Image</h2>
-                  </div>
-                  <VivaUploadPanel />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
 
           {/* Settings Panel */}
           <div className="bg-black/30 backdrop-blur-2xl rounded-[20px] border border-white/10 p-8 shadow-lg">
