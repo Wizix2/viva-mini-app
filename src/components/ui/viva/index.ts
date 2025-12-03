@@ -21,3 +21,8 @@ export { default as VivaScrollablePanel } from './VivaScrollablePanel';
 
 // Design system
 export { default as VivaThemeDemo } from './VivaThemeDemo';
+
+// Model selection components
+export { default as ModelCard } from './model-card';
+export { default as ModelGrid } from './model-grid';
+export { default as ModelSelect } from './model-select';
