@@ -15,6 +15,11 @@ export { default as VivaResolutionSelect } from './VivaResolutionSelect';
 export { default as VivaDurationSelect } from './VivaDurationSelect';
 export { default as VivaUploadPanel } from './VivaUploadPanel';
 
+// Advanced upload components
+export { default as UploadPanel } from './upload-panel';
+export { default as UploadPreview } from './upload-preview';
+export type { UploadFile, MediaType } from './upload-preview';
+
 // Content display components
 export { default as VivaMediaCard } from './VivaMediaCard';
 export { default as VivaScrollablePanel } from './VivaScrollablePanel';
