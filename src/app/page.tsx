@@ -55,13 +55,18 @@ export default function Home() {
             </>
           ) : (
             // Actual effect cards when loaded
-            effectCards.map((card) => (
-              <EffectCard
+            effectCards.map((card, index) => (
+              <div 
                 key={card.href}
-                icon={card.icon}
-                title={card.title}
-                href={card.href}
-              />
+                className={`animate-fadeInScale`}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <EffectCard
+                  icon={card.icon}
+                  title={card.title}
+                  href={card.href}
+                />
+              </div>
             ))
           )}
         </div>

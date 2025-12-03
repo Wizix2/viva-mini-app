@@ -5,7 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
 import { ArtlistStatusResponse, MODEL_DESCRIPTIONS } from "@/types/artlist";
-import { Layout, SkeletonResultPreview, ErrorState } from "@/components/viva";
+import { 
+  Layout, 
+  SkeletonResultPreview, 
+  ErrorState,
+  ResultContainer,
+  ResultHeader,
+  ResultActions
+} from "@/components/viva";
 
 export default function VideoResultPage() {
   const [isSharing, setIsSharing] = useState(false);
@@ -135,20 +142,26 @@ export default function VideoResultPage() {
             />
           </div>
         ) : (
-          <div className="premium-card p-5 mb-6 rounded-2xl">
-            <h2 className="text-xl font-bold text-white mb-2">Ваш результат готов!</h2>
-            <p className="text-gray-300 mb-5">
-              {status?.status === 'done' 
+          <ResultContainer>
+            <ResultHeader 
+              title="Ваш результат готов!" 
+              tag={getModelName()}
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                </svg>
+              }
+              description={status?.status === 'done' 
                 ? "Видео успешно создано с помощью ИИ" 
                 : "Произошла ошибка при создании видео"}
-            </p>
+            />
 
-            <div className="rounded-2xl overflow-hidden shadow-card mb-5">
+            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
               {/* Video result */}
               {status?.status === 'done' && status.videoUrl ? (
                 <div className="aspect-video w-full bg-dark-300">
                   <video 
-                    className="w-full h-full object-contain" 
+                    className="w-full h-full object-cover max-h-[60vh]" 
                     autoPlay 
                     loop 
                     muted 
@@ -174,46 +187,16 @@ export default function VideoResultPage() {
               )}
             </div>
 
-            <div className="text-center mb-6">
-              <p className="text-sm text-gray-400">
-                Тип: {getModelName()}
-              </p>
-            </div>
-          </div>
+            <ResultActions 
+              onDownload={handleDownload}
+              onShare={handleShare}
+              onCreateMore={() => router.push("/upload")}
+              isSharing={isSharing}
+              showDownload={status?.status === 'done' && !!status.videoUrl}
+              disabled={status?.status !== 'done'}
+            />
+          </ResultContainer>
         )}
-        
-        {/* Action buttons */}
-        <div className="grid grid-cols-2 gap-5">
-          <button
-            onClick={() => router.push("/upload")}
-            className="bg-dark-100 hover:bg-dark-200 transition-all duration-300 text-center py-4 rounded-xl font-medium"
-          >
-            Повторить
-          </button>
-          
-          {status?.status === 'done' && status.videoUrl ? (
-            <button 
-              onClick={handleDownload}
-              className="gradient-bg hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl font-medium flex items-center justify-center shadow-premium"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-              Скачать
-            </button>
-          ) : (
-            <button 
-              onClick={handleShare}
-              disabled={isSharing || status?.status !== 'done'}
-              className="gradient-bg hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl font-medium disabled:opacity-70 flex items-center justify-center shadow-premium"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-              </svg>
-              Поделиться
-            </button>
-          )}
-        </div>
       </div>
     </Layout>
   );

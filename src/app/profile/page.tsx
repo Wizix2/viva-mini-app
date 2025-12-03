@@ -56,7 +56,7 @@ export default function ProfilePage() {
         ) : (
           <>
             {/* User Avatar */}
-            <div className="w-28 h-28 rounded-full overflow-hidden bg-dark-100 mb-5 border-2 border-primary-500/30 shadow-premium">
+            <div className="w-28 h-28 rounded-full overflow-hidden bg-dark-100 mb-5 border-2 border-primary-500/30 shadow-premium animate-fadeInScale">
               {avatarUrl ? (
                 <img src={avatarUrl} alt="User Avatar" className="w-full h-full object-cover" />
               ) : (
@@ -69,13 +69,13 @@ export default function ProfilePage() {
             </div>
 
             {/* User Name */}
-            <h2 className="text-2xl font-bold mb-1">
+            <h2 className="text-2xl font-bold mb-1 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
               {user.first_name || "Пользователь"} {user.last_name || ""}
             </h2>
-            <p className="text-gray-400 mb-10">@{user.username || "user"}</p>
+            <p className="text-gray-400 mb-10 animate-fadeInUp" style={{ animationDelay: '200ms' }}>@{user.username || "user"}</p>
 
             {/* User Plan */}
-            <div className="premium-card w-full p-5 mb-6 rounded-2xl">
+            <div className="premium-card w-full p-5 mb-6 rounded-2xl animate-fadeInUp" style={{ animationDelay: '300ms' }}>
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-medium">Бесплатный тариф</h3>
@@ -88,7 +88,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Balance */}
-            <div className="premium-card w-full p-5 mb-6 rounded-2xl">
+            <div className="premium-card w-full p-5 mb-6 rounded-2xl animate-fadeInUp" style={{ animationDelay: '400ms' }}>
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-medium">Баланс</h3>
@@ -101,7 +101,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Actions */}
-            <div className="w-full space-y-4 mt-6">
+            <div className="w-full space-y-4 mt-6 animate-fadeInUp" style={{ animationDelay: '500ms' }}>
               <button 
                 onClick={handleClearHistory}
                 className="w-full bg-dark-100 hover:bg-dark-200 transition-all duration-300 text-center py-4 rounded-xl text-lg font-medium"

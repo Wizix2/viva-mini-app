@@ -24,7 +24,9 @@ export default function Layout({
       <Header title={title} showBackButton={showBackButton} backUrl={backUrl} />
       
       <main className="flex-1 px-4 sm:px-6 pb-24 w-full max-w-screen-md mx-auto">
-        {children}
+        <div className="animate-fadeInUp">
+          {children}
+        </div>
       </main>
       
       {showBottomNav && <BottomNav />}

@@ -44,12 +44,17 @@ const config: Config = {
         "gradient-button": "linear-gradient(to right, #9C4DFF, #B86CFF)",
         "gradient-hover": "linear-gradient(to right, #8B42E9, #A75BEF)",
         "gradient-active": "linear-gradient(to right, #7C38D3, #9A4FE3)",
+        "shimmer": "linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0.05) 60%, rgba(255, 255, 255, 0) 80%)",
+        "glow-purple": "radial-gradient(circle, rgba(156, 77, 255, 0.3) 0%, rgba(156, 77, 255, 0) 70%)",
       },
       boxShadow: {
         'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
         'card': '0 0 20px rgba(150, 80, 255, 0.08)',
         'premium': '0 8px 32px rgba(156, 77, 255, 0.15)',
         'hover': '0 10px 40px rgba(156, 77, 255, 0.2)',
+        'glow': '0 0 15px rgba(156, 77, 255, 0.5)',
+        'glow-lg': '0 0 25px rgba(156, 77, 255, 0.6)',
+        'inner-glow': 'inset 0 0 10px rgba(156, 77, 255, 0.3)',
       },
       backdropBlur: {
         'glass': '10px',
@@ -66,10 +71,35 @@ const config: Config = {
         fadeIn: {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInScale: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-500px 0' },
+          '100%': { backgroundPosition: '500px 0' },
+        },
+        pulse: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.5' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
         }
       },
       animation: {
         fadeIn: 'fadeIn 0.2s ease-out',
+        fadeInUp: 'fadeInUp 0.4s ease-out',
+        fadeInScale: 'fadeInScale 0.3s ease-out',
+        shimmer: 'shimmer 2s infinite linear',
+        pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        float: 'float 3s ease-in-out infinite',
       }
     },
   },

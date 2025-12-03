@@ -150,12 +150,14 @@ export default function HistoryPage() {
             </div>
             
             <div className="space-y-5">
-              {history.map((item) => (
+              {history.map((item, index) => (
                 <div 
                   key={item.id}
                   onClick={() => viewHistoryItem(item)}
-                  className="premium-card p-5 cursor-pointer hover:shadow-premium hover:-translate-y-1 transition-all duration-300 rounded-2xl"
+                  className="premium-card p-5 cursor-pointer hover:shadow-premium hover:-translate-y-1 transition-all duration-300 rounded-2xl relative overflow-hidden group animate-fadeInUp"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
+                  <div className="absolute inset-0 bg-shimmer bg-[length:500px_100%] animate-shimmer opacity-0 group-hover:opacity-100"></div>
                   <div className="flex items-center">
                     <div className="w-16 h-16 rounded-xl overflow-hidden bg-dark-300 mr-5 flex-shrink-0 flex items-center justify-center">
                       <span className="text-3xl">{getEffectIcon(item)}</span>

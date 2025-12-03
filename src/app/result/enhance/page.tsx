@@ -4,7 +4,14 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import { Layout, SkeletonResultPreview, ErrorState } from "@/components/viva";
+import { 
+  Layout, 
+  SkeletonResultPreview, 
+  ErrorState,
+  ResultContainer,
+  ResultHeader,
+  ResultActions
+} from "@/components/viva";
 
 interface StatusResponse {
   status: 'created' | 'processing' | 'done' | 'error';
@@ -114,20 +121,26 @@ export default function EnhanceResultPage() {
             />
           </div>
         ) : (
-          <div className="premium-card p-5 mb-6 rounded-2xl">
-            <h2 className="text-xl font-bold text-white mb-2">Результат улучшения</h2>
-            <p className="text-gray-300 mb-5">
-              {status?.status === 'done' 
+          <ResultContainer>
+            <ResultHeader 
+              title="Результат улучшения" 
+              tag="Улучшение"
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                </svg>
+              }
+              description={status?.status === 'done' 
                 ? "Ваше фото успешно улучшено с помощью ИИ" 
                 : "Произошла ошибка при обработке"}
-            </p>
+            />
 
-            <div className="rounded-2xl overflow-hidden shadow-card mb-5">
+            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
               {/* Image result */}
               {status?.status === 'done' && status.image_url ? (
                 <div className="aspect-video w-full bg-dark-300">
                   <img 
-                    className="w-full h-full object-contain" 
+                    className="w-full h-full object-cover max-h-[60vh]" 
                     src={status.image_url}
                     alt="Улучшенное изображение"
                   />
@@ -147,46 +160,21 @@ export default function EnhanceResultPage() {
               )}
             </div>
 
-            <div className="text-center mb-6">
+            <div className="text-center">
               <p className="text-sm text-gray-400">
                 ID задачи: {id || "Не указан"}
               </p>
             </div>
-          </div>
+
+            <ResultActions 
+              onShare={handleShare}
+              onCreateMore={() => router.push("/upload")}
+              isSharing={isSharing}
+              showDownload={false}
+              disabled={status?.status !== 'done'}
+            />
+          </ResultContainer>
         )}
-        
-        {/* Action buttons */}
-        <div className="grid grid-cols-2 gap-5">
-          <button
-            onClick={() => router.push("/upload")}
-            className="bg-dark-100 hover:bg-dark-200 transition-all duration-300 text-center py-4 rounded-xl font-medium"
-          >
-            Повторить
-          </button>
-          
-          <button 
-            onClick={handleShare}
-            disabled={isSharing || status?.status !== 'done'}
-            className="gradient-bg hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl font-medium disabled:opacity-70 flex items-center justify-center shadow-premium"
-          >
-            {isSharing ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Отправка...
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-                </svg>
-                Поделиться
-              </>
-            )}
-          </button>
-        </div>
       </div>
     </Layout>
   );

@@ -54,8 +54,8 @@ export default function BottomNav() {
               href={item.path}
               className={`flex flex-col items-center justify-center py-2 px-4 rounded-xl transition-all duration-300 ${
                 isActive
-                  ? "bg-gradient-button text-white shadow-premium"
-                  : "text-gray-400 hover:text-white hover:bg-dark-100"
+                  ? "bg-gradient-button text-white shadow-premium relative after:content-[''] after:absolute after:w-full after:h-full after:bg-glow-purple after:top-0 after:left-0 after:rounded-xl after:opacity-50 after:blur-xl after:-z-10"
+                  : "text-gray-400 hover:text-white hover:bg-dark-100 hover:scale-105"
               }`}
             >
               <div className="mb-1">{item.icon}</div>
