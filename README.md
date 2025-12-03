@@ -1,101 +1,74 @@
-# VIVA — AI Mini App для Telegram
+# Viva AI - Next.js UI Template
 
-VIVA — это приложение для Telegram Mini Apps, которое позволяет оживлять фотографии, улучшать изображения и создавать короткие AI-видео с помощью PixVerse API.
+A premium dark-themed UI template for AI generation applications, inspired by Artlist AI.
 
-## Функциональность
+## Features
 
-- **Оживление фото**: анимация лиц на фотографиях
-- **Улучшение качества**: повышение четкости и детализации изображений
-- **История генераций**: сохранение и просмотр предыдущих результатов
-- **Интеграция с Telegram**: шаринг результатов через Telegram
+- 🌙 Dark glass-morphism design
+- 🎨 Yellow accent theme
+- 📱 Fully responsive layout
+- 🔄 Smooth animations with Framer Motion
+- 🧩 Modular component architecture
+- 📋 Multiple page templates
 
-## Технический стек
+## Tech Stack
 
-- [Next.js](https://nextjs.org/) (App Router)
-- [TypeScript](https://www.typescriptlang.org/)
-- [TailwindCSS](https://tailwindcss.com/)
-- [tma.js](https://docs.telegram-mini-apps.com/packages/telegram-apps-sdk/2-x) (Telegram Mini Apps SDK)
-- [PixVerse API](https://pixverse.ai/)
-- [Vercel](https://vercel.com/) для деплоя
+- Next.js 15 (App Router)
+- TailwindCSS
+- Framer Motion
+- Lucide Icons
 
-## Установка зависимостей
+## Components
+
+The project includes the following UI components:
+
+- `VivaSidebar`: Collapsible sidebar navigation
+- `VivaNavbar`: Top navigation bar with search
+- `VivaTabSwitcher`: Tab navigation for different generation types
+- `VivaModelSelect`: Model selection cards
+- `VivaResolutionSelect`: Resolution selection tabs
+- `VivaDurationSelect`: Duration selection for videos
+- `VivaUploadPanel`: File upload component
+- `VivaCreditsBadge`: Credits display
+- `VivaMediaCard`: Media card for displaying generated content
+- `VivaScrollablePanel`: Horizontal scrollable panel
+
+## Pages
+
+- `/` - Main generation page
+- `/library` - Content library/explore page
+- `/profile` - User profile and subscription
+- `/settings` - App settings
+- `/history` - Generation history
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
 
 ```bash
 npm install
-# или
+# or
 yarn install
-# или
-pnpm install
 ```
 
-## Скрипты
-
-- `dev`: Запуск приложения в режиме разработки
-- `dev:https`: Запуск приложения в режиме разработки с использованием SSL-сертификата
-- `build`: Сборка приложения для продакшена
-- `start`: Запуск Next.js сервера в продакшен-режиме
-- `lint`: Проверка кода с помощью ESLint
-
-Для запуска скрипта используйте команду:
+3. Run the development server:
 
 ```bash
-npm run <скрипт>
-# Пример: npm run dev
+npm run dev
+# or
+yarn dev
 ```
 
-## Настройка переменных окружения
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Создайте файл `.env.local` в корне проекта и добавьте следующие переменные:
+## Customization
 
-```
-NEXT_PUBLIC_PIXVERSE_API_KEY=ваш_ключ_api
-NEXT_PUBLIC_PIXVERSE_API_URL=https://api.pixverse.ai
-```
+The UI is built with TailwindCSS and can be easily customized by modifying:
 
-## Структура проекта
+- `tailwind.config.ts` - Color schemes and theme settings
+- `src/app/globals.css` - Global styles and CSS variables
 
-```
-/src
-  /app                  # Страницы приложения (App Router)
-    /page.tsx           # Главная страница
-    /upload/page.tsx    # Страница загрузки фото
-    /result/page.tsx    # Страница результата
-    /history/page.tsx   # История генераций
-  /components           # Компоненты React
-  /contexts             # React контексты
-    /TelegramContext.tsx
-    /PixVerseContext.tsx
-  /services             # Сервисы для API
-    /telegram.ts
-    /pixverse.ts
-  /hooks                # React хуки
-```
+## License
 
-## Деплой на Vercel
-
-Самый простой способ развернуть приложение — использовать [Vercel Platform](https://vercel.com/new).
-
-1. Создайте новый проект на Vercel и подключите его к вашему репозиторию
-2. Настройте переменные окружения в настройках проекта:
-   - `NEXT_PUBLIC_PIXVERSE_API_KEY`
-   - `NEXT_PUBLIC_PIXVERSE_API_URL`
-3. Дождитесь завершения деплоя
-4. Используйте полученный URL для настройки вашего Telegram бота через [@BotFather](https://t.me/botfather)
-
-## Интеграция с Telegram Mini Apps
-
-1. Создайте бота с помощью [@BotFather](https://t.me/botfather)
-2. Отправьте команду `/newapp` боту BotFather
-3. Выберите созданного бота
-4. Укажите название и короткое описание для Mini App
-5. Загрузите иконку
-6. Укажите URL вашего приложения (например, `https://your-app.vercel.app`)
-7. Сохраните полученный токен и используйте его для авторизации
-
-## Полезные ссылки
-
-- [Документация Telegram Mini Apps](https://docs.telegram-mini-apps.com/)
-- [Документация Next.js](https://nextjs.org/docs)
-- [Документация TailwindCSS](https://tailwindcss.com/docs)
-- [Документация PixVerse API](https://pixverse.ai/docs)
-- [Сообщество разработчиков Telegram](https://t.me/devs)
+MIT

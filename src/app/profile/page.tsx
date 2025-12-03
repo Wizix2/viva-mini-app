@@ -8,13 +8,28 @@ import {
   ProfileSubscription,
   ProfileSettings
 } from "@/components/ui/viva";
+import { useTelegram } from "@/contexts/TelegramContext";
+import { isTelegramWebApp } from "@/lib/isTelegram";
 
 export default function Profile() {
+  const { user } = useTelegram();
   const [username, setUsername] = useState("JohnDoe");
   const [fullName, setFullName] = useState("John Doe");
   const [avatarUrl, setAvatarUrl] = useState("/avatar-placeholder.jpg");
   const [credits, setCredits] = useState(750);
   const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'ultra'>('pro');
+  
+  // Load user data from Telegram if available
+  useEffect(() => {
+    if (isTelegramWebApp() && user?.photo_url) {
+      setAvatarUrl(user.photo_url!);
+    }
+    
+    if (user) {
+      setUsername(user.username || user.first_name);
+      setFullName(`${user.first_name} ${user.last_name || ''}`);
+    }
+  }, [user]);
   
   // Animation variants for staggered children
   const containerVariants = {
@@ -81,7 +96,7 @@ export default function Profile() {
           username={username}
           fullName={fullName}
           avatarUrl={avatarUrl}
-          telegramId="123456789"
+          telegramId={user?.id?.toString() || "123456789"}
         />
         
         {/* Credits Section */}

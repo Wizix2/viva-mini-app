@@ -1,196 +1,232 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useTelegram } from "@/contexts/TelegramContext";
-import { Layout, SkeletonHistoryItem, EmptyState } from "@/components/viva";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { 
+  Calendar, 
+  Image, 
+  Video, 
+  Download, 
+  Trash2, 
+  Filter,
+  Search
+} from "lucide-react";
 
 interface HistoryItem {
   id: string;
-  type: 'animate' | 'enhance' | 'video';
-  model?: string;
+  type: "image" | "video";
+  src: string;
+  prompt: string;
   date: string;
+  model: string;
 }
 
-export default function HistoryPage() {
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { showAlert } = useTelegram();
-  const router = useRouter();
-
-  useEffect(() => {
-    // Load history from localStorage
-    const loadHistory = () => {
-      setIsLoading(true);
-      try {
-        // Get history
-        const savedHistory = localStorage.getItem('vivaHistory');
-        let historyItems: HistoryItem[] = [];
-        
-        if (savedHistory) {
-          historyItems = JSON.parse(savedHistory);
-        }
-        
-        // Add demo items if history is empty
-        if (historyItems.length === 0) {
-          const demoItems: HistoryItem[] = [
-            {
-              id: 'demo1',
-              type: 'video',
-              model: 'veo',
-              date: new Date(Date.now() - 86400000).toISOString() // yesterday
-            },
-            {
-              id: 'demo2',
-              type: 'video',
-              model: 'sora',
-              date: new Date(Date.now() - 172800000).toISOString() // 2 days ago
-            },
-            {
-              id: 'demo3',
-              type: 'video',
-              model: 'nano',
-              date: new Date(Date.now() - 259200000).toISOString() // 3 days ago
-            }
-          ];
-          historyItems = demoItems;
-          localStorage.setItem('vivaHistory', JSON.stringify(historyItems));
-        }
-        
-        setHistory(historyItems);
-      } catch (error) {
-        console.error('Error loading history:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadHistory();
-  }, []);
-
-  // Format date function
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // View history item function
-  const viewHistoryItem = (item: HistoryItem) => {
-    // Navigate to the appropriate result page
-    if (item.type === 'animate') {
-      router.push(`/result/animate?id=${item.id}`);
-    } else if (item.type === 'enhance') {
-      router.push(`/result/enhance?id=${item.id}`);
-    } else {
-      router.push(`/result/video?id=${item.id}`);
-    }
-  };
-
-  // Clear history function
-  const clearHistory = () => {
-    try {
-      localStorage.removeItem('vivaHistory');
-      setHistory([]);
-      showAlert("История успешно очищена");
-    } catch (error) {
-      console.error("Error clearing history:", error);
-    }
-  };
-
-  // Get effect type name
-  const getEffectTypeName = (item: HistoryItem) => {
-    if (item.type === 'animate') return 'Анимация';
-    if (item.type === 'enhance') return 'Улучшение';
-    
-    // For video type, check model
-    if (item.model === 'veo') return 'Full Body Video';
-    if (item.model === 'sora') return 'Creative Scene';
-    if (item.model === 'nano') return 'Motion Animation';
-    
-    return 'AI Video';
-  };
-
-  // Get effect icon
-  const getEffectIcon = (item: HistoryItem) => {
-    if (item.type === 'animate') return '🎭';
-    if (item.type === 'enhance') return '✨';
-    
-    // For video type, check model
-    if (item.model === 'veo') return '🎬';
-    if (item.model === 'sora') return '🎨';
-    if (item.model === 'nano') return '💃';
-    
-    return '🎥';
-  };
+export default function History() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<"all" | "image" | "video">("all");
+  
+  // Mock data for history items
+  const historyItems: HistoryItem[] = Array.from({ length: 20 }).map((_, i) => ({
+    id: `history-${i}`,
+    type: i % 3 === 0 ? "video" : "image",
+    src: `https://picsum.photos/seed/${i + 400}/300/300`,
+    prompt: i % 2 === 0 
+      ? "A futuristic cityscape with neon lights and flying cars in a cyberpunk style"
+      : "Abstract digital art with vibrant colors and geometric shapes, surreal landscape",
+    date: i % 5 === 0 
+      ? "Today" 
+      : i % 3 === 0 
+        ? "Yesterday" 
+        : `${Math.floor(i / 2) + 1} days ago`,
+    model: i % 4 === 0 ? "Stable XL" : i % 3 === 0 ? "SD Turbo" : "Realistic Vision"
+  }));
+  
+  // Filter history items based on search query and filter type
+  const filteredItems = historyItems.filter(item => {
+    const matchesSearch = item.prompt.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = filterType === "all" || item.type === filterType;
+    return matchesSearch && matchesType;
+  });
 
   return (
-    <Layout title="История" showBackButton={true}>
-      <div className="mt-6 mb-24">
-        {isLoading ? (
-          <div className="space-y-5">
-            {[...Array(6)].map((_, index) => (
-              <SkeletonHistoryItem key={`skeleton-${index}`} />
-            ))}
+    <div className="space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-2"
+      >
+        <h1 className="text-3xl font-bold text-white">History</h1>
+        <p className="text-white/70">
+          Your past generations and creations
+        </p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between"
+      >
+        <div className="relative w-full max-w-md">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-white/70" />
           </div>
-        ) : history.length > 0 ? (
-          <>
-            <div className="flex justify-end mb-5">
-              <button 
-                onClick={clearHistory}
-                className="text-gray-400 hover:text-white text-sm bg-dark-100 hover:bg-dark-200 px-4 py-2 rounded-lg transition-all duration-300"
-              >
-                Очистить историю
-              </button>
-            </div>
-            
-            <div className="space-y-5">
-              {history.map((item, index) => (
-                <div 
-                  key={item.id}
-                  onClick={() => viewHistoryItem(item)}
-                  className="premium-card p-5 cursor-pointer hover:shadow-premium hover:-translate-y-1 transition-all duration-300 rounded-2xl relative overflow-hidden group animate-fadeInUp"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="absolute inset-0 bg-shimmer bg-[length:500px_100%] animate-shimmer opacity-0 group-hover:opacity-100"></div>
-                  <div className="flex items-center">
-                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-dark-300 mr-5 flex-shrink-0 flex items-center justify-center">
-                      <span className="text-3xl">{getEffectIcon(item)}</span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-white text-lg">
-                        {getEffectTypeName(item)}
-                      </p>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {formatDate(item.date)}
-                      </p>
+          <input
+            type="text"
+            placeholder="Search by prompt..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-lg py-2 pl-10 pr-4 text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-yellow-400/50 focus:border-yellow-400/50 transition-all"
+          />
+        </div>
+        
+        <div className="flex items-center space-x-2 bg-black/30 rounded-lg p-1 self-end sm:self-auto">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setFilterType("all")}
+            className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
+              filterType === "all"
+                ? "bg-yellow-400 text-black"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            All
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setFilterType("image")}
+            className={`px-3 py-1.5 rounded-md text-sm flex items-center transition-colors ${
+              filterType === "image"
+                ? "bg-yellow-400 text-black"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            <Image className="w-4 h-4 mr-1.5" />
+            Images
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setFilterType("video")}
+            className={`px-3 py-1.5 rounded-md text-sm flex items-center transition-colors ${
+              filterType === "video"
+                ? "bg-yellow-400 text-black"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            <Video className="w-4 h-4 mr-1.5" />
+            Videos
+          </motion.button>
+        </div>
+      </motion.div>
+
+      {filteredItems.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col items-center justify-center py-16"
+        >
+          <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+            <Calendar className="w-8 h-8 text-white/30" />
+          </div>
+          <h3 className="text-xl font-medium text-white">No results found</h3>
+          <p className="text-white/50 mt-2 text-center max-w-md">
+            {searchQuery 
+              ? "Try using different keywords or removing filters" 
+              : "Your generation history will appear here"}
+          </p>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="space-y-4"
+        >
+          {filteredItems.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="bg-black/30 backdrop-blur-xl rounded-xl border border-white/10 p-4 flex flex-col sm:flex-row gap-4"
+            >
+              <div className="relative w-full sm:w-32 h-32 flex-shrink-0">
+                <img
+                  src={item.src}
+                  alt={item.prompt}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                {item.type === "video" && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-lg">
+                    <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center">
+                      <Video className="w-5 h-5 text-black ml-0.5" />
                     </div>
                   </div>
+                )}
+              </div>
+              
+              <div className="flex-1">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <div className="flex items-center">
+                      <span className="text-xs px-2 py-0.5 bg-white/10 rounded-full text-white/70 mr-2">
+                        {item.model}
+                      </span>
+                      <span className="text-xs text-white/50 flex items-center">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        {item.date}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-white line-clamp-2 sm:line-clamp-1">{item.prompt}</p>
+                  </div>
+                  
+                  <div className="flex space-x-2 self-end sm:self-auto">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center"
+                    >
+                      <Download className="w-4 h-4 text-white/70" />
+                    </motion.button>
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center"
+                    >
+                      <Trash2 className="w-4 h-4 text-white/70" />
+                    </motion.button>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <EmptyState 
-            title="История пуста" 
-            description="Здесь будут отображаться ваши генерации"
-            icon={
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-              </svg>
-            }
-            action={{
-              label: "Создать эффект",
-              onClick: () => router.push("/upload")
-            }}
-          />
-        )}
-      </div>
-    </Layout>
+                
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="text-xs px-2 py-1 bg-white/5 rounded-md text-white/70 flex items-center">
+                    {item.type === "image" ? (
+                      <Image className="w-3 h-3 mr-1.5" />
+                    ) : (
+                      <Video className="w-3 h-3 mr-1.5" />
+                    )}
+                    {item.type === "image" ? "Image" : "Video"}
+                  </div>
+                  
+                  {["#cyberpunk", "#futuristic", "#abstract"].map((tag, i) => (
+                    <div key={i} className="text-xs px-2 py-1 bg-white/5 rounded-md text-white/70">
+                      {tag}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+    </div>
   );
 }
