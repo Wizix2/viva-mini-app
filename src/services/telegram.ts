@@ -9,6 +9,7 @@ export interface TelegramUser {
   username?: string;
   language_code?: string;
   is_premium?: boolean;
+  photo_url?: string;
 }
 
 // Сервис для работы с Telegram Mini Apps
@@ -34,7 +35,9 @@ export const TelegramService = {
         // @ts-ignore - обходим проблему типов в SDK
         language_code: userData.language_code,
         // @ts-ignore - обходим проблему типов в SDK
-        is_premium: userData.is_premium
+        is_premium: userData.is_premium,
+        // @ts-ignore - обходим проблему типов в SDK
+        photo_url: userData.photo_url
       };
     } catch (e) {
       console.error("Error getting Telegram user:", e);
