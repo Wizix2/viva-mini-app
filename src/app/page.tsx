@@ -1,11 +1,23 @@
-// src/app/page.tsx
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { useEffect } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
+import Layout from "@/components/layout/Layout";
+import EffectCard from "@/components/EffectCard";
+import FAB from "@/components/FAB";
+
+// Define effect cards
+const effectCards = [
+  { icon: "🎭", title: "Оживить фото", href: "/upload?effect=animate" },
+  { icon: "✨", title: "HD-улучшение", href: "/upload?effect=enhance" },
+  { icon: "🌄", title: "AI-фон", href: "/upload?effect=background" },
+  { icon: "📺", title: "Cartoon", href: "/upload?effect=cartoon" },
+  { icon: "🕰️", title: "Реставрация", href: "/upload?effect=restore" },
+  { icon: "👤", title: "4K-портрет", href: "/upload?effect=portrait" },
+  { icon: "💄", title: "Ретушь", href: "/upload?effect=retouch" },
+  { icon: "👙", title: "Body reshape", href: "/upload?effect=reshape" },
+];
 
 export default function Home() {
   const { setupMainButton } = useTelegram();
@@ -13,7 +25,7 @@ export default function Home() {
   useEffect(() => {
     if (!isTelegramWebApp()) return;
     
-    // Скрываем главную кнопку на главной странице
+    // Hide main button on home page
     setupMainButton("", false);
     
     return () => {
@@ -22,48 +34,31 @@ export default function Home() {
   }, [setupMainButton]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dark-200 to-dark-300 text-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Декоративные элементы */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-primary-700 rounded-full filter blur-3xl opacity-10"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-primary-600 rounded-full filter blur-3xl opacity-10"></div>
+    <Layout>
+      <div className="mt-4 mb-24">
+        {/* Grid of effect cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {effectCards.map((card) => (
+            <EffectCard
+              key={card.href}
+              icon={card.icon}
+              title={card.title}
+              href={card.href}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="z-10 flex flex-col items-center">
-        {/* ЛОГОТИП */}
-        <div className="mb-6 relative">
-          <h1 className="text-6xl font-bold gradient-text">VIVA</h1>
-          <div className="absolute -top-2 -right-2 w-4 h-4 bg-primary-500 rounded-full animate-pulse"></div>
-        </div>
-
-        {/* ЗАГОЛОВОК */}
-        <p className="text-center text-xl text-gray-300 mb-8">
-          Оживи свои фото с ИИ
-        </p>
-
-        {/* Краткое описание */}
-        <div className="glass-effect rounded-2xl p-5 mb-8 max-w-xs text-center">
-          <p className="text-sm text-gray-300">
-            Создавай AI-видео и улучшай фото за 10 секунд прямо в Telegram
-          </p>
-        </div>
-
-        {/* КНОПКА: Загрузить фото */}
-        <Link
-          href="/upload"
-          className="w-full max-w-xs gradient-bg hover:opacity-90 transition-all text-center py-4 rounded-xl text-lg font-medium mb-4 shadow-lg"
-        >
-          Загрузить фото
-        </Link>
-
-        {/* КНОПКА: История */}
-        <Link
-          href="/history"
-          className="w-full max-w-xs bg-glass-100 text-center py-4 rounded-xl text-lg opacity-70 hover:opacity-80 transition-all"
-        >
-          История
-        </Link>
-      </div>
-    </div>
+      {/* Floating Action Button */}
+      <FAB 
+        href="/upload" 
+        label="Загрузить фото"
+        icon={
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+          </svg>
+        }
+      />
+    </Layout>
   );
 }
