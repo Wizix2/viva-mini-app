@@ -4,9 +4,10 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { useRouter } from "next/navigation";
 import TelegramService, { TelegramUser } from "@/services/telegram";
 import { isTelegramWebApp } from "@/lib/isTelegram";
+import { TelegramUserFixed } from "@/types/telegram";
 
 interface TelegramContextType {
-  user: TelegramUser | null;
+  user: TelegramUserFixed | null;
   isAuthenticated: boolean;
   isReady: boolean;
   showAlert: (message: string) => Promise<void>;
@@ -24,7 +25,7 @@ interface TelegramContextType {
 const TelegramContext = createContext<TelegramContextType | undefined>(undefined);
 
 export const TelegramProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<TelegramUser | null>(null);
+  const [user, setUser] = useState<TelegramUserFixed | null>(null);
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
 
@@ -43,7 +44,7 @@ export const TelegramProvider = ({ children }: { children: ReactNode }) => {
       
       // Получение пользователя
       const currentUser = TelegramService.getUser();
-      setUser(currentUser);
+      setUser(currentUser as TelegramUserFixed);
       
       setIsReady(true);
     } catch (error) {

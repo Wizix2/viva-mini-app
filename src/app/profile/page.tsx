@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
 import { Layout, SkeletonProfileBlock, EmptyState } from "@/components/viva";
+import { TelegramUserFixed } from "@/types/telegram";
 
 export default function ProfilePage() {
   const { user, showAlert } = useTelegram();
