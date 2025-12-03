@@ -36,3 +36,11 @@ export { default as ProfileHeader } from './profile-header';
 export { default as ProfileCredits } from './profile-credits';
 export { default as ProfileSubscription } from './profile-subscription';
 export { default as ProfileSettings } from './profile-settings';
+
+// Feed components
+export { default as FeedCard } from './feed-card';
+export type { FeedItem, FeedItemType } from './feed-card';
+export { default as FeedGrid, FeedGridSkeleton } from './feed-grid';
+export { default as FeedFilters } from './feed-filters';
+export type { FilterType } from './feed-filters';
+export { default as FeedModal } from './feed-modal';
