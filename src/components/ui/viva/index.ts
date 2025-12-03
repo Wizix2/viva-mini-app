@@ -30,3 +30,9 @@ export { default as ModelSelect } from './model-select';
 // Mode switching
 export { default as ModeSwitcher } from './mode-switcher';
 export type { GenerationMode } from './mode-switcher';
+
+// Profile components
+export { default as ProfileHeader } from './profile-header';
+export { default as ProfileCredits } from './profile-credits';
+export { default as ProfileSubscription } from './profile-subscription';
+export { default as ProfileSettings } from './profile-settings';
