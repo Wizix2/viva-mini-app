@@ -1,5 +1,7 @@
+import "@tma.js/sdk";
+
 declare module "@tma.js/sdk" {
-  export interface TelegramUser {
+  interface TelegramUser {
     photo_url?: string;
   }
 }

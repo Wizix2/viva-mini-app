@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/viva";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import { TelegramUserExtended } from "@/types/TelegramUserExtended";
 
 export default function Profile() {
-  const { user } = useTelegram() as { user: TelegramUserExtended | null };
+  const { user } = useTelegram();
   const [username, setUsername] = useState("JohnDoe");
   const [fullName, setFullName] = useState("John Doe");
   const [avatarUrl, setAvatarUrl] = useState("/avatar-placeholder.jpg");
@@ -22,7 +21,7 @@ export default function Profile() {
   
   // Load user data from Telegram if available
   useEffect(() => {
-    if (isTelegramWebApp() && user?.photo_url) {
+    if (isTelegramWebApp() && user && "photo_url" in user && user.photo_url) {
       setAvatarUrl(user.photo_url!);
     }
     
