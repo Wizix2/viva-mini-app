@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
 import { ArtlistModel, MODEL_DESCRIPTIONS } from "@/types/artlist";
-import Layout from "@/components/viva/Layout";
+import { Layout } from "@/components/viva";
 
 export default function UploadPage() {
   const searchParams = useSearchParams();
@@ -163,30 +163,30 @@ export default function UploadPage() {
 
   return (
     <Layout title={getEffectTitle()} showBackButton={true}>
-      <div className="mt-4 mb-24">
+      <div className="mt-6 mb-24">
         {!preview ? (
-          <label className="block w-full border-2 border-dashed border-primary-500/50 rounded-card p-8 text-center cursor-pointer hover:border-primary-500 transition-all bg-dark-100">
+          <label className="block w-full border-2 border-dashed border-primary-500/50 rounded-2xl p-8 text-center cursor-pointer hover:border-primary-500 transition-all duration-300 bg-dark-100">
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-primary-500/20 flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
+              <div className="w-20 h-20 rounded-full bg-primary-500/20 flex items-center justify-center mb-5">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="text-lg font-medium text-primary-300">Выберите фото</span>
+              <span className="text-xl font-medium text-primary-300">Выберите фото</span>
               <span className="text-sm text-gray-400 mt-2">JPG, PNG или WebP (макс. 10 МБ)</span>
             </div>
             <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
           </label>
         ) : (
           <div className="space-y-6">
-            <div className="relative rounded-card overflow-hidden shadow-card bg-dark-100">
+            <div className="relative rounded-2xl overflow-hidden shadow-card bg-dark-100">
               <img src={preview} className="w-full h-auto" alt="Preview" />
               <button 
                 onClick={() => {
                   setPreview(null);
                   setSelectedFile(null);
                 }} 
-                className="absolute top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-black/70"
+                className="absolute top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-black/70 transition-all duration-300"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -195,26 +195,26 @@ export default function UploadPage() {
             </div>
             
             {/* Model selection */}
-            <div className="premium-card p-4">
-              <h3 className="text-lg font-medium text-white mb-3">Выберите эффект:</h3>
+            <div className="premium-card p-5 rounded-2xl">
+              <h3 className="text-lg font-medium text-white mb-4">Выберите эффект:</h3>
               
               <div className="space-y-3">
                 {/* Veo model */}
                 <div 
                   onClick={() => setSelectedModel('veo')}
-                  className={`p-4 rounded-xl cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 ${
                     selectedModel === 'veo' 
-                      ? 'bg-gradient-button text-white' 
+                      ? 'bg-gradient-button text-white shadow-premium' 
                       : 'bg-dark-200 hover:bg-dark-100'
                   }`}
                 >
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-dark-300/50 flex items-center justify-center mr-3 flex-shrink-0">
-                      <span className="text-xl">{MODEL_DESCRIPTIONS.veo.icon}</span>
+                    <div className="w-12 h-12 rounded-full bg-dark-300/50 flex items-center justify-center mr-4 flex-shrink-0">
+                      <span className="text-2xl">{MODEL_DESCRIPTIONS.veo.icon}</span>
                     </div>
                     <div>
-                      <h4 className="font-medium">{MODEL_DESCRIPTIONS.veo.name}</h4>
-                      <p className="text-xs text-gray-300">{MODEL_DESCRIPTIONS.veo.description}</p>
+                      <h4 className="font-medium text-base">{MODEL_DESCRIPTIONS.veo.name}</h4>
+                      <p className="text-xs text-gray-300 mt-1">{MODEL_DESCRIPTIONS.veo.description}</p>
                     </div>
                   </div>
                 </div>
@@ -222,19 +222,19 @@ export default function UploadPage() {
                 {/* Sora model */}
                 <div 
                   onClick={() => setSelectedModel('sora')}
-                  className={`p-4 rounded-xl cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 ${
                     selectedModel === 'sora' 
-                      ? 'bg-gradient-button text-white' 
+                      ? 'bg-gradient-button text-white shadow-premium' 
                       : 'bg-dark-200 hover:bg-dark-100'
                   }`}
                 >
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-dark-300/50 flex items-center justify-center mr-3 flex-shrink-0">
-                      <span className="text-xl">{MODEL_DESCRIPTIONS.sora.icon}</span>
+                    <div className="w-12 h-12 rounded-full bg-dark-300/50 flex items-center justify-center mr-4 flex-shrink-0">
+                      <span className="text-2xl">{MODEL_DESCRIPTIONS.sora.icon}</span>
                     </div>
                     <div>
-                      <h4 className="font-medium">{MODEL_DESCRIPTIONS.sora.name}</h4>
-                      <p className="text-xs text-gray-300">{MODEL_DESCRIPTIONS.sora.description}</p>
+                      <h4 className="font-medium text-base">{MODEL_DESCRIPTIONS.sora.name}</h4>
+                      <p className="text-xs text-gray-300 mt-1">{MODEL_DESCRIPTIONS.sora.description}</p>
                     </div>
                   </div>
                 </div>
@@ -242,19 +242,19 @@ export default function UploadPage() {
                 {/* Nano model */}
                 <div 
                   onClick={() => setSelectedModel('nano')}
-                  className={`p-4 rounded-xl cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 ${
                     selectedModel === 'nano' 
-                      ? 'bg-gradient-button text-white' 
+                      ? 'bg-gradient-button text-white shadow-premium' 
                       : 'bg-dark-200 hover:bg-dark-100'
                   }`}
                 >
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-dark-300/50 flex items-center justify-center mr-3 flex-shrink-0">
-                      <span className="text-xl">{MODEL_DESCRIPTIONS.nano.icon}</span>
+                    <div className="w-12 h-12 rounded-full bg-dark-300/50 flex items-center justify-center mr-4 flex-shrink-0">
+                      <span className="text-2xl">{MODEL_DESCRIPTIONS.nano.icon}</span>
                     </div>
                     <div>
-                      <h4 className="font-medium">{MODEL_DESCRIPTIONS.nano.name}</h4>
-                      <p className="text-xs text-gray-300">{MODEL_DESCRIPTIONS.nano.description}</p>
+                      <h4 className="font-medium text-base">{MODEL_DESCRIPTIONS.nano.name}</h4>
+                      <p className="text-xs text-gray-300 mt-1">{MODEL_DESCRIPTIONS.nano.description}</p>
                     </div>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export default function UploadPage() {
             </div>
             
             {/* Prompt input */}
-            <div className="premium-card p-4 space-y-3">
+            <div className="premium-card p-5 space-y-3 rounded-2xl">
               <label htmlFor="prompt" className="text-sm font-medium text-white">
                 Описание (необязательно):
               </label>
@@ -271,7 +271,7 @@ export default function UploadPage() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder={getDefaultPrompt(selectedModel)}
-                className="w-full bg-dark-200 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 border border-dark-100"
+                className="w-full bg-dark-200 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 border border-dark-100 transition-all duration-300"
                 rows={3}
               />
               <p className="text-xs text-gray-400">
@@ -282,7 +282,7 @@ export default function UploadPage() {
             <button 
               onClick={handleGenerate}
               disabled={isLoading}
-              className="w-full gradient-bg hover:opacity-90 transition-all text-center py-4 rounded-xl text-lg font-medium shadow-premium disabled:opacity-70 flex items-center justify-center"
+              className="w-full gradient-bg hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl text-lg font-medium shadow-premium disabled:opacity-70 flex items-center justify-center"
             >
               {isLoading ? (
                 <>

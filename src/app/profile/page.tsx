@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import Layout from "@/components/viva/Layout";
+import { Layout } from "@/components/viva";
 
 export default function ProfilePage() {
   const { user, showAlert } = useTelegram();
@@ -32,14 +32,14 @@ export default function ProfilePage() {
 
   return (
     <Layout title="Профиль">
-      <div className="flex flex-col items-center mt-6">
+      <div className="flex flex-col items-center mt-8">
         {/* User Avatar */}
-        <div className="w-24 h-24 rounded-full overflow-hidden bg-dark-100 mb-4">
+        <div className="w-28 h-28 rounded-full overflow-hidden bg-dark-100 mb-5 border-2 border-primary-500/30 shadow-premium">
           {avatarUrl ? (
             <img src={avatarUrl} alt="User Avatar" className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
               </svg>
             </div>
@@ -47,49 +47,49 @@ export default function ProfilePage() {
         </div>
 
         {/* User Name */}
-        <h2 className="text-xl font-bold mb-1">
+        <h2 className="text-2xl font-bold mb-1">
           {user?.first_name || "Пользователь"} {user?.last_name || ""}
         </h2>
-        <p className="text-gray-400 mb-8">@{user?.username || "user"}</p>
+        <p className="text-gray-400 mb-10">@{user?.username || "user"}</p>
 
         {/* User Plan */}
-        <div className="premium-card w-full p-4 mb-6">
+        <div className="premium-card w-full p-5 mb-6 rounded-2xl">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium">Бесплатный тариф</h3>
-              <p className="text-gray-400 text-sm">5 генераций в день</p>
+              <p className="text-gray-400 text-sm mt-1">5 генераций в день</p>
             </div>
-            <button className="gradient-bg px-4 py-2 rounded-xl text-sm font-medium">
+            <button className="gradient-bg px-5 py-2.5 rounded-xl text-sm font-medium shadow-premium transition-all duration-300 hover:shadow-hover">
               Улучшить
             </button>
           </div>
         </div>
 
         {/* Balance */}
-        <div className="premium-card w-full p-4 mb-6">
+        <div className="premium-card w-full p-5 mb-6 rounded-2xl">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium">Баланс</h3>
-              <p className="text-gray-400 text-sm">3 генерации осталось</p>
+              <p className="text-gray-400 text-sm mt-1">3 генерации осталось</p>
             </div>
-            <button className="bg-dark-200 px-4 py-2 rounded-xl text-sm font-medium border border-gray-700">
+            <button className="bg-dark-200 hover:bg-dark-100 px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-700/50 transition-all duration-300">
               Пополнить
             </button>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="w-full space-y-4 mt-4">
+        <div className="w-full space-y-4 mt-6">
           <button 
             onClick={handleClearHistory}
-            className="w-full bg-dark-100 hover:bg-dark-200 transition-all text-center py-4 rounded-xl text-lg font-medium"
+            className="w-full bg-dark-100 hover:bg-dark-200 transition-all duration-300 text-center py-4 rounded-xl text-lg font-medium"
           >
             Очистить историю
           </button>
           
           <button 
             onClick={handleSupport}
-            className="w-full bg-dark-100 hover:bg-dark-200 transition-all text-center py-4 rounded-xl text-lg font-medium"
+            className="w-full bg-dark-100 hover:bg-dark-200 transition-all duration-300 text-center py-4 rounded-xl text-lg font-medium"
           >
             Поддержка
           </button>

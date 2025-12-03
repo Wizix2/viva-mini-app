@@ -20,10 +20,10 @@ export default function Layout({
   showBottomNav = true,
 }: LayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-dark-300">
+    <div className="min-h-screen flex flex-col bg-dark-300 text-white">
       <Header title={title} showBackButton={showBackButton} backUrl={backUrl} />
       
-      <main className="flex-1 px-6 pb-24">
+      <main className="flex-1 px-4 sm:px-6 pb-24 w-full max-w-screen-md mx-auto">
         {children}
       </main>
       

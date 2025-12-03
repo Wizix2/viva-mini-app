@@ -44,7 +44,7 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bottom-nav z-50 px-4 py-2">
-      <div className="flex items-center justify-around">
+      <div className="flex items-center justify-around max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.path;
           
@@ -52,14 +52,14 @@ export default function BottomNav() {
             <Link
               key={item.path}
               href={item.path}
-              className={`flex flex-col items-center justify-center py-2 px-4 rounded-xl transition-all ${
+              className={`flex flex-col items-center justify-center py-2 px-4 rounded-xl transition-all duration-300 ${
                 isActive
-                  ? "bg-gradient-button text-white"
-                  : "text-gray-400 hover:text-white"
+                  ? "bg-gradient-button text-white shadow-premium"
+                  : "text-gray-400 hover:text-white hover:bg-dark-100"
               }`}
             >
               <div className="mb-1">{item.icon}</div>
-              <span className="text-xs">{item.name}</span>
+              <span className="text-xs font-medium">{item.name}</span>
             </Link>
           );
         })}

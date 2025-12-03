@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import Layout from "@/components/viva/Layout";
+import { Layout } from "@/components/viva";
 
 interface StatusResponse {
   status: 'created' | 'processing' | 'done' | 'error';
@@ -82,14 +82,14 @@ export default function EnhanceResultPage() {
       <Layout showBackButton={false} showBottomNav={false}>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6">
+            <div className="w-24 h-24 mx-auto mb-8">
               <svg className="animate-spin h-full w-full text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"></circle>
+                <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Обработка...</h2>
-            <p className="text-gray-400">Это займет 3–7 секунд</p>
+            <h2 className="text-3xl font-bold text-white mb-3">Обработка...</h2>
+            <p className="text-gray-400 text-lg">Это займет 3–7 секунд</p>
           </div>
         </div>
       </Layout>
@@ -98,15 +98,16 @@ export default function EnhanceResultPage() {
 
   return (
     <Layout title="Улучшение фото" showBackButton={true}>
-      <div className="mt-4 mb-24">
-        <div className="premium-card p-4 mb-6">
-          <p className="text-gray-300 mb-4">
+      <div className="mt-6 mb-24">
+        <div className="premium-card p-5 mb-6 rounded-2xl">
+          <h2 className="text-xl font-bold text-white mb-2">Результат улучшения</h2>
+          <p className="text-gray-300 mb-5">
             {status?.status === 'done' 
               ? "Ваше фото успешно улучшено с помощью ИИ" 
               : "Произошла ошибка при обработке"}
           </p>
 
-          <div className="rounded-xl overflow-hidden shadow-card mb-4">
+          <div className="rounded-2xl overflow-hidden shadow-card mb-5">
             {/* Image result */}
             {status?.status === 'done' && status.image_url ? (
               <div className="aspect-video w-full bg-dark-300">
@@ -139,10 +140,10 @@ export default function EnhanceResultPage() {
         </div>
         
         {/* Action buttons */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-5">
           <button
             onClick={() => router.push("/upload")}
-            className="bg-dark-100 hover:bg-dark-200 transition-all text-center py-3 rounded-xl font-medium"
+            className="bg-dark-100 hover:bg-dark-200 transition-all duration-300 text-center py-4 rounded-xl font-medium"
           >
             Повторить
           </button>
@@ -150,11 +151,11 @@ export default function EnhanceResultPage() {
           <button 
             onClick={handleShare}
             disabled={isSharing || status?.status !== 'done'}
-            className="gradient-bg hover:opacity-90 transition-all text-center py-3 rounded-xl font-medium disabled:opacity-70 flex items-center justify-center"
+            className="gradient-bg hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl font-medium disabled:opacity-70 flex items-center justify-center shadow-premium"
           >
             {isSharing ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -162,7 +163,7 @@ export default function EnhanceResultPage() {
               </>
             ) : (
               <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                 </svg>
                 Поделиться

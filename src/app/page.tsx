@@ -3,9 +3,7 @@
 import { useEffect } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import Layout from "@/components/viva/Layout";
-import EffectCard from "@/components/viva/EffectCard";
-import FAB from "@/components/viva/FAB";
+import { Layout, EffectCard, FAB } from "@/components/viva";
 
 // Define effect cards
 const effectCards = [
@@ -35,9 +33,9 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="mt-4 mb-24">
+      <div className="mt-6 mb-24">
         {/* Grid of effect cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
           {effectCards.map((card) => (
             <EffectCard
               key={card.href}

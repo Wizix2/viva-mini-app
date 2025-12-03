@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import Layout from "@/components/viva/Layout";
+import { Layout } from "@/components/viva";
 
 interface HistoryItem {
   id: string;
@@ -131,38 +131,38 @@ export default function HistoryPage() {
 
   return (
     <Layout title="История" showBackButton={true}>
-      <div className="mt-4 mb-24">
+      <div className="mt-6 mb-24">
         {isLoading ? (
           <div className="flex justify-center py-10">
-            <div className="w-10 h-10 rounded-full border-4 border-primary-500 border-t-transparent animate-spin"></div>
+            <div className="w-12 h-12 rounded-full border-4 border-primary-500 border-t-transparent animate-spin"></div>
           </div>
         ) : history.length > 0 ? (
           <>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-5">
               <button 
                 onClick={clearHistory}
-                className="text-gray-400 hover:text-white text-sm bg-dark-100 px-3 py-1 rounded-lg"
+                className="text-gray-400 hover:text-white text-sm bg-dark-100 hover:bg-dark-200 px-4 py-2 rounded-lg transition-all duration-300"
               >
                 Очистить историю
               </button>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-5">
               {history.map((item) => (
                 <div 
                   key={item.id}
                   onClick={() => viewHistoryItem(item)}
-                  className="premium-card p-4 cursor-pointer hover:shadow-premium transition-all"
+                  className="premium-card p-5 cursor-pointer hover:shadow-premium hover:-translate-y-1 transition-all duration-300 rounded-2xl"
                 >
                   <div className="flex items-center">
-                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-dark-300 mr-4 flex-shrink-0 flex items-center justify-center">
-                      <span className="text-2xl">{getEffectIcon(item)}</span>
+                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-dark-300 mr-5 flex-shrink-0 flex items-center justify-center">
+                      <span className="text-3xl">{getEffectIcon(item)}</span>
                     </div>
                     <div>
-                      <p className="font-medium text-white">
+                      <p className="font-medium text-white text-lg">
                         {getEffectTypeName(item)}
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-400 mt-1">
                         {formatDate(item.date)}
                       </p>
                     </div>
@@ -172,14 +172,14 @@ export default function HistoryPage() {
             </div>
           </>
         ) : (
-          <div className="premium-card p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-dark-300 flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
+          <div className="premium-card p-10 text-center rounded-2xl">
+            <div className="w-20 h-20 rounded-full bg-dark-300 flex items-center justify-center mx-auto mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
               </svg>
             </div>
-            <p className="text-white font-medium">История пуста</p>
-            <p className="text-sm text-gray-400 mt-2">Здесь будут отображаться ваши генерации</p>
+            <p className="text-white font-medium text-xl">История пуста</p>
+            <p className="text-sm text-gray-400 mt-3">Здесь будут отображаться ваши генерации</p>
           </div>
         )}
       </div>

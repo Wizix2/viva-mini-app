@@ -15,16 +15,16 @@ const config: Config = {
           200: "#ddd6fe",
           300: "#c4b5fd",
           400: "#a78bfa",
-          500: "#9C4DFF", // Updated to match Fotolab.ai
-          600: "#8B42E9", // Adjusted
-          700: "#7C38D3", // Adjusted
-          800: "#6D2EBD", // Adjusted
-          900: "#5E24A7", // Adjusted
-          950: "#4F1A91", // Adjusted
+          500: "#9C4DFF", // Main accent color
+          600: "#8B42E9",
+          700: "#7C38D3",
+          800: "#6D2EBD",
+          900: "#5E24A7",
+          950: "#4F1A91",
         },
         accent: {
-          light: "#B86CFF", // Light accent for gradient
-          default: "#9C4DFF", // Default accent
+          light: "#B86CFF", // Light accent for gradient end
+          default: "#9C4DFF", // Default accent for gradient start
         },
         dark: {
           100: "#1A142B", // Card background
@@ -40,13 +40,16 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "gradient-purple": "linear-gradient(to right bottom, #9C4DFF, #B86CFF)", // Updated to match Fotolab.ai
-        "gradient-button": "linear-gradient(to right, #9C4DFF, #B86CFF)", // For buttons
+        "gradient-purple": "linear-gradient(to right bottom, #9C4DFF, #B86CFF)",
+        "gradient-button": "linear-gradient(to right, #9C4DFF, #B86CFF)",
+        "gradient-hover": "linear-gradient(to right, #8B42E9, #A75BEF)",
+        "gradient-active": "linear-gradient(to right, #7C38D3, #9A4FE3)",
       },
       boxShadow: {
         'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
         'card': '0 0 20px rgba(150, 80, 255, 0.08)',
         'premium': '0 8px 32px rgba(156, 77, 255, 0.15)',
+        'hover': '0 10px 40px rgba(156, 77, 255, 0.2)',
       },
       backdropBlur: {
         'glass': '10px',
@@ -54,6 +57,10 @@ const config: Config = {
       },
       borderRadius: {
         'card': '18px',
+        '2xl': '1rem',
+      },
+      transitionDuration: {
+        '400': '400ms',
       }
     },
   },
