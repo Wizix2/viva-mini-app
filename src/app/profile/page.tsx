@@ -21,8 +21,8 @@ export default function Profile() {
   
   // Load user data from Telegram if available
   useEffect(() => {
-    if (isTelegramWebApp() && user && "photo_url" in user && user.photo_url) {
-      setAvatarUrl(user.photo_url!);
+    if (isTelegramWebApp() && (user as any)?.photo_url) {
+      setAvatarUrl((user as any).photo_url);
     }
     
     if (user) {
