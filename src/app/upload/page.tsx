@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
 import { ArtlistModel, MODEL_DESCRIPTIONS } from "@/types/artlist";
-import { Layout, ErrorState, ConfirmModal } from "@/components/viva";
+import { Layout, ErrorState, ConfirmModal, UploadCard, UploadStepIndicator, UploadPreviewFrame } from "@/components/viva";
 
 export default function UploadPage() {
   const searchParams = useSearchParams();
@@ -176,32 +176,41 @@ export default function UploadPage() {
           </div>
         )}
         
-        {!preview ? (
-          <label className="block w-full border-2 border-dashed border-primary-500/50 rounded-2xl p-8 text-center cursor-pointer hover:border-primary-500 transition-all duration-300 bg-dark-100">
-            <div className="flex flex-col items-center">
-              <div className="w-20 h-20 rounded-full bg-primary-500/20 flex items-center justify-center mb-5">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <span className="text-xl font-medium text-primary-300">Выберите фото</span>
-              <span className="text-sm text-gray-400 mt-2">JPG, PNG или WebP (макс. 10 МБ)</span>
-            </div>
-            <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
-          </label>
-        ) : (
-          <div className="space-y-6">
-            <div className="relative rounded-2xl overflow-hidden shadow-card bg-dark-100">
-              <img src={preview} className="w-full h-auto" alt="Preview" />
-              <button 
-                onClick={() => setShowConfirmModal(true)} 
-                className="absolute top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-black/70 transition-all duration-300"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
+        <UploadStepIndicator step={preview ? 2 : 1} className="mb-6 relative" />
+        
+        <UploadCard>
+          {!preview ? (
+            <>
+              <label className="block w-full border-2 border-dashed border-primary-500/50 rounded-2xl p-8 text-center cursor-pointer hover:border-primary-500 transition-all duration-300 bg-dark-100 group">
+                <div className="flex flex-col items-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-shimmer bg-[length:500px_100%] animate-shimmer opacity-0 group-hover:opacity-100"></div>
+                  <div className="w-20 h-20 rounded-full bg-primary-500/20 flex items-center justify-center mb-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-xl font-medium text-primary-300">Выберите фото</span>
+                  <span className="text-sm text-gray-400 mt-2">JPG, PNG или WebP (макс. 10 МБ)</span>
+                </div>
+                <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
+              </label>
+              <p className="text-white/40 text-xs text-center mt-2">Поддерживаемые форматы: JPG / PNG</p>
+            </>
+          ) : (
+            <div className="space-y-6">
+              <UploadPreviewFrame>
+                <div className="relative bg-dark-100">
+                  <img src={preview} className="w-full h-auto" alt="Preview" />
+                  <button 
+                    onClick={() => setShowConfirmModal(true)} 
+                    className="absolute top-3 right-3 bg-black/50 p-2 rounded-full hover:bg-black/70 transition-all duration-300"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </UploadPreviewFrame>
             
             {/* Model selection */}
             <div className="premium-card p-5 rounded-2xl">
@@ -291,7 +300,7 @@ export default function UploadPage() {
             <button 
               onClick={handleGenerate}
               disabled={isLoading}
-              className="w-full gradient-bg hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl text-lg font-medium shadow-premium disabled:opacity-70 flex items-center justify-center"
+              className="w-full bg-gradient-button hover:opacity-90 transition-all duration-300 text-center py-4 rounded-xl text-lg font-medium shadow-premium disabled:opacity-70 flex items-center justify-center hover:scale-[1.02] active:scale-[0.98]"
             >
               {isLoading ? (
                 <>
@@ -307,6 +316,7 @@ export default function UploadPage() {
             </button>
           </div>
         )}
+        </UploadCard>
       </div>
       
       {/* Confirm Modal */}

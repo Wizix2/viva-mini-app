@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTelegram } from "@/contexts/TelegramContext";
 import { isTelegramWebApp } from "@/lib/isTelegram";
-import { Layout, EffectCard, FAB, SkeletonEffectCard } from "@/components/viva";
+import { Layout, EffectCard, FAB, SkeletonEffectCard, HomeHero, HomeFilters, RecommendedSection } from "@/components/viva";
 
 // Define effect cards
 const effectCards = [
@@ -43,7 +43,13 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="mt-6 mb-24">
+      <div className="mt-4 mb-24 px-1">
+        {/* Hero Section */}
+        <HomeHero className="mb-6" />
+        
+        {/* Filters */}
+        <HomeFilters active="popular" className="mb-6" />
+        
         {/* Grid of effect cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
           {loading ? (
@@ -58,18 +64,22 @@ export default function Home() {
             effectCards.map((card, index) => (
               <div 
                 key={card.href}
-                className={`animate-fadeInScale`}
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="animate-fadeInScale group"
+                style={{ animationDelay: `${index * 70}ms` }}
               >
                 <EffectCard
                   icon={card.icon}
                   title={card.title}
                   href={card.href}
+                  className="hover:shadow-glow transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
                 />
               </div>
             ))
           )}
         </div>
+        
+        {/* Recommended Section */}
+        <RecommendedSection />
       </div>
 
       {/* Floating Action Button */}

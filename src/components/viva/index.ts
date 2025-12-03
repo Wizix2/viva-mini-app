@@ -13,3 +13,9 @@ export * from './skeletons';
 
 // State components
 export * from './states';
+
+// Upload components
+export * from './upload';
+
+// Home components
+export * from './home';
