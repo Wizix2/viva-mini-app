@@ -22,17 +22,10 @@ export function ProfileHeader({
 }: ProfileHeaderProps) {
   const [imageError, setImageError] = useState(false);
 
-  // ✔ SAFE easing for new Framer Motion (string only)
+  // ❗ Больше НЕТ transition внутри variants → типизация проходит
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut", // <-- безопасный вариант, идеально работает
-      },
-    },
+    visible: { opacity: 1, y: 0 }
   };
 
   return (
@@ -40,9 +33,11 @@ export function ProfileHeader({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      transition={{ duration: 0.5 }} // <- вынесено сюда, теперь типы совпадают
       className={`glass p-6 rounded-2xl ${className}`}
     >
       <div className="flex items-center gap-5">
+
         {/* Avatar */}
         <div className="relative">
           <div className="w-24 h-24 rounded-xl overflow-hidden bg-black/30 border border-white/10 shadow-lg">
@@ -62,7 +57,6 @@ export function ProfileHeader({
             )}
           </div>
 
-          {/* PRO badge */}
           <div className="absolute -bottom-2 -right-2 bg-viva-yellow text-black text-xs font-bold px-2 py-1 rounded-full">
             PRO
           </div>
@@ -99,5 +93,3 @@ export function ProfileHeader({
 }
 
 export default ProfileHeader;
-
-
