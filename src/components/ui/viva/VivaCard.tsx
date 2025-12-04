@@ -19,8 +19,6 @@ export default function VivaCard({
     visible: { opacity: 1, y: 0 },
   };
 
-  // Внимание: НИКАКИХ ...props внутрь motion.div
-  // Иначе прилетает ошибка типов framer-motion
   if (animate) {
     return (
       <motion.div
@@ -37,6 +35,3 @@ export default function VivaCard({
 
   return <div className={className}>{children}</div>;
 }
-
-
-export default VivaCard;
