@@ -1,9 +1,9 @@
-import "@tma.js/sdk";
-
-declare module "@tma.js/sdk" {
+declare global {
   interface TelegramUser {
     photo_url?: string;
     allows_write_to_pm?: boolean;
     [key: string]: any;
   }
 }
+
+export {};
