@@ -6,5 +6,3 @@ export function isTelegram() {
     typeof window.Telegram.WebApp !== "undefined"
   );
 }
-
-}
