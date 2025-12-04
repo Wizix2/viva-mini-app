@@ -2,18 +2,24 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Bell, ShieldCheck, Languages } from "lucide-react";
+import { Settings, Bell, ShieldCheck, Languages, Trash2, RefreshCcw } from "lucide-react";
 
 interface ProfileSettingsProps {
   className?: string;
+  onClearCache?: () => void;
+  onDeleteAccount?: () => void;
 }
 
-export default function ProfileSettings({ className = "" }: ProfileSettingsProps) {
+export default function ProfileSettings({
+  className = "",
+  onClearCache,
+  onDeleteAccount
+}: ProfileSettingsProps) {
   const [notifications, setNotifications] = useState(true);
   const [privacy, setPrivacy] = useState("public");
   const [language, setLanguage] = useState("en");
 
-  // ❗ Исправленные variants — БЕЗ transition
+  // FIXED — no transition inside variants
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
@@ -24,7 +30,7 @@ export default function ProfileSettings({ className = "" }: ProfileSettingsProps
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      transition={{ duration: 0.4 }}  // ✔ типизация правильная
+      transition={{ duration: 0.4 }}
       className={`glass p-6 rounded-2xl ${className}`}
     >
       <h3 className="text-xl font-semibold text-white flex items-center gap-2 mb-6">
@@ -84,10 +90,24 @@ export default function ProfileSettings({ className = "" }: ProfileSettingsProps
         </select>
       </div>
 
-      <div className="text-xs text-white/40 mt-4">
-        Changes are saved automatically.
+      {/* Extra actions */}
+      <div className="mt-6 flex flex-col gap-3">
+        <button
+          onClick={onClearCache}
+          className="flex items-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-white transition-all"
+        >
+          <RefreshCcw className="w-4 h-4" />
+          Clear Cache
+        </button>
+
+        <button
+          onClick={onDeleteAccount}
+          className="flex items-center gap-2 px-4 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-xl transition-all"
+        >
+          <Trash2 className="w-4 h-4" />
+          Delete Account
+        </button>
       </div>
     </motion.div>
   );
 }
-
