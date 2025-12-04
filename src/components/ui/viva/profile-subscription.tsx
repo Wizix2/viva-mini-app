@@ -1,163 +1,122 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Check, Star, Crown, Zap, ArrowRight } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Crown, Zap, Check, X } from "lucide-react";
 
-type SubscriptionTier = 'free' | 'pro' | 'ultra';
-
-interface ProfileSubscriptionProps {
-  tier?: SubscriptionTier;
-  className?: string;
-  onUpgrade?: () => void;
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: string;
+  features: string[];
+  highlighted?: boolean;
 }
 
-export function ProfileSubscription({
-  tier = 'free',
+interface ProfileSubscriptionProps {
+  className?: string;
+  plans?: SubscriptionPlan[];
+}
+
+export default function ProfileSubscription({
   className = "",
-  onUpgrade
+  plans = []
 }: ProfileSubscriptionProps) {
-  // Animation variants
+  // ✔ FIX: no transition inside variants (required by Framer Motion 11)
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.5,
-        delay: 0.2,
-        ease: "easeOut"
-      }
-    }
-  };
-  
-  const itemVariants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: (custom: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: 0.3 + (custom * 0.1),
-        duration: 0.4
-      }
-    })
+    visible: { opacity: 1, y: 0 }
   };
 
-  // Determine tier details
-  const tierDetails = {
-    free: {
-      name: "Free",
-      icon: Star,
-      color: "text-white",
-      bgColor: "bg-white/10",
-      borderColor: "border-white/10",
-      features: [
-        "100 credits per month",
-        "Basic image generation",
-        "Standard resolution",
-        "Community support"
-      ],
-      upgradeText: "Upgrade to Pro"
-    },
-    pro: {
-      name: "Professional",
-      icon: Crown,
-      color: "text-viva-yellow",
-      bgColor: "bg-viva-yellow/10",
-      borderColor: "border-viva-yellow/30",
-      features: [
-        "1000 credits per month",
-        "Advanced image & video generation",
-        "HD resolution",
-        "Priority support",
-        "Commercial usage rights"
-      ],
-      upgradeText: "Upgrade to Ultra"
-    },
-    ultra: {
-      name: "Ultra",
-      icon: Zap,
-      color: "text-viva-yellow",
-      bgColor: "bg-viva-yellow/20",
-      borderColor: "border-viva-yellow/40",
-      features: [
-        "Unlimited credits",
-        "All generation features",
-        "4K resolution",
-        "24/7 priority support",
-        "Commercial usage rights",
-        "API access",
-        "White-label exports"
-      ],
-      upgradeText: "Current Plan"
-    }
-  };
-  
-  const currentTier = tierDetails[tier];
-  const IconComponent = currentTier.icon;
+  const defaultPlans: SubscriptionPlan[] = plans.length
+    ? plans
+    : [
+        {
+          id: "basic",
+          name: "Basic",
+          price: "$5 / month",
+          features: ["100 credits", "Standard models"]
+        },
+        {
+          id: "pro",
+          name: "Pro",
+          price: "$15 / month",
+          features: ["500 credits", "Pro models", "Priority rendering"],
+          highlighted: true
+        },
+        {
+          id: "ultimate",
+          name: "Ultimate",
+          price: "$30 / month",
+          features: [
+            "Unlimited credits",
+            "All models",
+            "Fastest rendering",
+            "VIP support"
+          ]
+        }
+      ];
 
   return (
     <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }} // ✔ Valid easing
       className={`glass p-6 rounded-2xl ${className}`}
     >
-      <h3 className="text-lg font-semibold text-white mb-5">Your Subscription</h3>
-      
-      {/* Current tier */}
-      <div className={`p-4 rounded-xl ${currentTier.bgColor} ${currentTier.borderColor} border mb-5`}>
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full ${currentTier.bgColor} border ${currentTier.borderColor} flex items-center justify-center`}>
-            <IconComponent className={`w-5 h-5 ${currentTier.color}`} />
-          </div>
-          <div>
-            <div className={`font-bold text-lg ${currentTier.color}`}>{currentTier.name}</div>
-            <div className="text-sm text-white/60">Current Plan</div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Features list */}
-      <div className="space-y-3 mb-6">
-        {currentTier.features.map((feature, index) => (
+      <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+        <Crown className="w-5 h-5 text-viva-yellow" />
+        Subscription Plans
+      </h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {defaultPlans.map((plan) => (
           <motion.div
-            key={index}
-            custom={index}
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex items-center gap-3"
+            key={plan.id}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className={`rounded-2xl p-5 border ${
+              plan.highlighted
+                ? "bg-viva-yellow/20 border-viva-yellow shadow-viva-glow"
+                : "bg-white/5 border-white/10"
+            }`}
           >
-            <div className={`w-5 h-5 rounded-full ${currentTier.bgColor} flex items-center justify-center flex-shrink-0`}>
-              <Check className={`w-3 h-3 ${currentTier.color}`} />
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-semibold text-white">{plan.name}</h4>
+              {plan.highlighted && (
+                <Zap className="w-5 h-5 text-viva-yellow" />
+              )}
             </div>
-            <span className="text-white/80">{feature}</span>
+
+            <div className="text-2xl font-bold text-viva-yellow mt-3">
+              {plan.price}
+            </div>
+
+            <ul className="mt-4 space-y-2">
+              {plan.features.map((feature, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-center gap-2 text-white/80"
+                >
+                  <Check className="w-4 h-4 text-viva-yellow" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <button
+              className={`w-full mt-5 py-3 rounded-xl font-medium transition-all ${
+                plan.highlighted
+                  ? "bg-viva-yellow text-black shadow-viva-glow hover:bg-yellow-300"
+                  : "bg-white/10 text-white hover:bg-white/20"
+              }`}
+            >
+              Choose Plan
+            </button>
           </motion.div>
         ))}
       </div>
-      
-      {/* Upgrade button - only show if not on Ultra plan */}
-      {tier !== 'ultra' && (
-        <motion.button
-          whileHover={{ scale: 1.03, backgroundColor: "rgba(245, 215, 66, 0.2)" }}
-          whileTap={{ scale: 0.97 }}
-          onClick={onUpgrade}
-          className={`w-full py-3 px-5 ${currentTier.bgColor} ${currentTier.color} font-medium rounded-xl flex items-center justify-center gap-2 transition-all border ${currentTier.borderColor}`}
-        >
-          <span>{currentTier.upgradeText}</span>
-          <ArrowRight className="w-4 h-4" />
-        </motion.button>
-      )}
-      
-      {/* Plan info for Ultra */}
-      {tier === 'ultra' && (
-        <div className="text-center text-white/50 text-sm">
-          Your Ultra plan is active until December 31, 2025
-        </div>
-      )}
     </motion.div>
   );
 }
-
-export default ProfileSubscription;
