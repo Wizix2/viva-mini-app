@@ -12,29 +12,30 @@ import {
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
 
-  // МОДЕЛИ В ФОРМАТЕ, КОТОРЫЙ ЖДЁТ VivaModelSelect (Model[])
+  // REQUIRED state for model selection
+  const [selectedModel, setSelectedModel] = useState("model-1");
+
+  // REQUIRED list of available models
   const models = [
     {
-      id: "realistic",
-      name: "Realistic",
-      description: "Photorealistic animation with natural motion.",
+      id: "model-1",
+      name: "Standard Motion",
+      description: "Balanced quality and speed",
       creditCost: 1,
     },
     {
-      id: "cinematic",
-      name: "Cinematic",
-      description: "Film-style look with dramatic lighting.",
+      id: "model-2",
+      name: "HD Motion",
+      description: "Sharper details, slower generation",
       creditCost: 2,
     },
     {
-      id: "anime",
-      name: "Anime",
-      description: "Stylized animation inspired by anime.",
-      creditCost: 1,
+      id: "model-3",
+      name: "Cinematic Motion",
+      description: "Maximum smoothness and clarity",
+      creditCost: 3,
     },
   ];
-
-  const [selectedModel, setSelectedModel] = useState("realistic");
 
   useEffect(() => {
     setMounted(true);
@@ -68,20 +69,20 @@ export default function HomePage() {
 
       {/* SETTINGS PANEL */}
       <div className="grid md:grid-cols-2 gap-8">
-        {/* LEFT SIDE */}
         <div className="space-y-6">
-          {/* VivaModelSelect теперь получает нужные пропсы */}
+
+          {/* FIXED: VivaModelSelect now gets correct props */}
           <VivaModelSelect
             models={models}
-            value={selectedModel}
-            onChange={setSelectedModel}
+            selected={selectedModel}
+            onSelect={(id) => setSelectedModel(id)}
           />
 
           <VivaResolutionSelect />
           <VivaDurationSelect />
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* Feature cards */}
         <div className="space-y-4">
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -89,9 +90,7 @@ export default function HomePage() {
           >
             <Flame className="w-7 h-7 text-orange-400" />
             <div>
-              <h3 className="text-lg font-semibold text-white">
-                High-Quality Motion
-              </h3>
+              <h3 className="text-lg font-semibold text-white">High-Quality Motion</h3>
               <p className="text-white/60 text-sm">
                 Smooth, realistic animation based on your photo.
               </p>
@@ -104,12 +103,8 @@ export default function HomePage() {
           >
             <Zap className="w-7 h-7 text-blue-400" />
             <div>
-              <h3 className="text-lg font-semibold text-white">
-                Fast Processing
-              </h3>
-              <p className="text-white/60 text-sm">
-                Generation takes less than 10 seconds.
-              </p>
+              <h3 className="text-lg font-semibold text-white">Fast Processing</h3>
+              <p className="text-white/60 text-sm">Generation takes less than 10 seconds.</p>
             </div>
           </motion.div>
 
@@ -119,9 +114,7 @@ export default function HomePage() {
           >
             <Lightbulb className="w-7 h-7 text-yellow-300" />
             <div>
-              <h3 className="text-lg font-semibold text-white">
-                Smart Enhancement
-              </h3>
+              <h3 className="text-lg font-semibold text-white">Smart Enhancement</h3>
               <p className="text-white/60 text-sm">
                 AI improves lighting, colors, and sharpness.
               </p>
@@ -130,7 +123,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* CTA BUTTON */}
+      {/* CTA */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
