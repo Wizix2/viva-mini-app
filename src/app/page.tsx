@@ -1,17 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Sparkles, Flame, Zap, Lightbulb } from "lucide-react";
 import {
   VivaResolutionSelect,
   VivaDurationSelect,
   VivaModelSelect,
-  // VivaStyleSelect,  // ❌ Убираем — этого компонента нет в /viva
 } from "@/components/ui/viva";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
+
+  // MODEL SELECT STATE
+  const models = [
+    { id: "realistic", label: "Realistic" },
+    { id: "cinematic", label: "Cinematic" },
+    { id: "anime", label: "Anime" },
+  ];
+
+  const [selectedModel, setSelectedModel] = useState("realistic");
 
   useEffect(() => {
     setMounted(true);
@@ -45,18 +53,21 @@ export default function HomePage() {
 
       {/* SETTINGS PANEL */}
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Left */}
+        {/* LEFT SIDE */}
         <div className="space-y-6">
-          <VivaModelSelect />
 
-          {/* ❌ Убираем компонент, которого не существует */}
-          {/* <VivaStyleSelect /> */}
+          {/* FIXED: VivaModelSelect now receives required props */}
+          <VivaModelSelect
+            models={models}
+            value={selectedModel}
+            onChange={setSelectedModel}
+          />
 
           <VivaResolutionSelect />
           <VivaDurationSelect />
         </div>
 
-        {/* Right: Feature Cards */}
+        {/* RIGHT SIDE */}
         <div className="space-y-4">
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -105,7 +116,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* CTA */}
+      {/* CTA BUTTON */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -116,4 +127,3 @@ export default function HomePage() {
     </div>
   );
 }
-
