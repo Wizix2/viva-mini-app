@@ -1,5 +1,3 @@
-export {};
-
 declare global {
   interface Window {
     Telegram?: {
@@ -7,4 +5,6 @@ declare global {
     };
   }
 }
+
+export {};
 
