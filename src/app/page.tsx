@@ -7,7 +7,7 @@ import {
   VivaResolutionSelect,
   VivaDurationSelect,
   VivaModelSelect,
-  VivaStyleSelect,
+  // VivaStyleSelect,  // ❌ Убираем — этого компонента нет в /viva
 } from "@/components/ui/viva";
 
 export default function HomePage() {
@@ -38,7 +38,9 @@ export default function HomePage() {
           <Sparkles className="w-7 h-7 text-yellow-400" />
           Create Animation
         </h1>
-        <p className="text-white/60">Generate stunning animated videos from a single photo.</p>
+        <p className="text-white/60">
+          Generate stunning animated videos from a single photo.
+        </p>
       </motion.div>
 
       {/* SETTINGS PANEL */}
@@ -46,7 +48,10 @@ export default function HomePage() {
         {/* Left */}
         <div className="space-y-6">
           <VivaModelSelect />
-          <VivaStyleSelect />
+
+          {/* ❌ Убираем компонент, которого не существует */}
+          {/* <VivaStyleSelect /> */}
+
           <VivaResolutionSelect />
           <VivaDurationSelect />
         </div>
@@ -59,8 +64,12 @@ export default function HomePage() {
           >
             <Flame className="w-7 h-7 text-orange-400" />
             <div>
-              <h3 className="text-lg font-semibold text-white">High-Quality Motion</h3>
-              <p className="text-white/60 text-sm">Smooth, realistic animation based on your photo.</p>
+              <h3 className="text-lg font-semibold text-white">
+                High-Quality Motion
+              </h3>
+              <p className="text-white/60 text-sm">
+                Smooth, realistic animation based on your photo.
+              </p>
             </div>
           </motion.div>
 
@@ -70,8 +79,12 @@ export default function HomePage() {
           >
             <Zap className="w-7 h-7 text-blue-400" />
             <div>
-              <h3 className="text-lg font-semibold text-white">Fast Processing</h3>
-              <p className="text-white/60 text-sm">Generation takes less than 10 seconds.</p>
+              <h3 className="text-lg font-semibold text-white">
+                Fast Processing
+              </h3>
+              <p className="text-white/60 text-sm">
+                Generation takes less than 10 seconds.
+              </p>
             </div>
           </motion.div>
 
@@ -81,8 +94,12 @@ export default function HomePage() {
           >
             <Lightbulb className="w-7 h-7 text-yellow-300" />
             <div>
-              <h3 className="text-lg font-semibold text-white">Smart Enhancement</h3>
-              <p className="text-white/60 text-sm">AI improves lighting, colors, and sharpness.</p>
+              <h3 className="text-lg font-semibold text-white">
+                Smart Enhancement
+              </h3>
+              <p className="text-white/60 text-sm">
+                AI improves lighting, colors, and sharpness.
+              </p>
             </div>
           </motion.div>
         </div>
@@ -99,3 +116,4 @@ export default function HomePage() {
     </div>
   );
 }
+
