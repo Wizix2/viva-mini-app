@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Bell, Menu, X } from "lucide-react";
 import { VivaCreditsBadge } from "./VivaCreditsBadge";
-import { VivaGlass } from "./VivaGlass";
+import VivaGlass from "./VivaGlass";
 
 interface VivaNavbarProps {
   toggleSidebar?: () => void;
