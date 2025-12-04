@@ -32,10 +32,11 @@ export function VivaDurationSelect({ onDurationChange }: VivaDurationSelectProps
 
   return (
     <div className="space-y-3">
+      {/* TOP SELECTOR */}
       <div className="bg-black/20 backdrop-blur-xl rounded-xl p-1.5 flex">
         {durations.map((duration) => {
           const isActive = selectedDuration === duration.id;
-          
+
           return (
             <motion.button
               key={duration.id}
@@ -63,14 +64,13 @@ export function VivaDurationSelect({ onDurationChange }: VivaDurationSelectProps
         })}
       </div>
       
-      {/* Duration cost indicator */}
+      {/* DESCRIPTION + CREDIT MULTIPLIER */}
       <div className="flex justify-between items-center px-1">
         <AnimatedDescription durations={durations} selectedId={selectedDuration} />
-        
-        <div className="flex items-center">
+
+        <div className="flex items-center w-full ml-4">
           <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
             {durations.map((duration, index) => {
-              const isSelected = selectedDuration === duration.id;
               const selectedIndex = durations.findIndex(d => d.id === selectedDuration);
               const width = `${((index + 1) / durations.length) * 100}%`;
               
@@ -93,7 +93,10 @@ export function VivaDurationSelect({ onDurationChange }: VivaDurationSelectProps
   );
 }
 
-// Animated description component
+/* ─────────────────────────────────────────────── */
+/* Animated description under selector */
+/* ─────────────────────────────────────────────── */
+
 function AnimatedDescription({ 
   durations, 
   selectedId 
@@ -102,7 +105,7 @@ function AnimatedDescription({
   selectedId: string 
 }) {
   const selectedDuration = durations.find(d => d.id === selectedId);
-  
+
   return (
     <motion.div 
       className="h-8 text-xs text-white/50 flex items-center"
@@ -120,17 +123,26 @@ function AnimatedDescription({
           className="flex items-center"
         >
           <Clock className="w-3 h-3 mr-1.5 text-yellow-400/70" />
+          
           <span>
             {selectedDuration?.seconds} seconds
-            {selectedDuration?.creditMultiplier > 1 && 
-              ` (${selectedDuration.creditMultiplier}x credits)`
-            }
+
+            {/* 100% безопасная проверка (TS доволен) */}
+            {selectedDuration &&
+              selectedDuration.creditMultiplier !== undefined &&
+              selectedDuration.creditMultiplier > 1 && (
+                ` (${selectedDuration.creditMultiplier}x credits)`
+            )}
           </span>
         </motion.div>
       </AnimatePresence>
     </motion.div>
   );
 }
+
+/* ─────────────────────────────────────────────── */
+/* PRESET DURATIONS */
+/* ─────────────────────────────────────────────── */
 
 const durations: Duration[] = [
   {
