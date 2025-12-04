@@ -23,10 +23,12 @@ export default function Library() {
     id: `item-${i}`,
     type: i % 4 === 0 ? "video" : "image",
     src: `https://picsum.photos/seed/${i + 300}/600/600`,
-    prompt: i % 2 === 0 
-      ? "A futuristic cityscape with neon lights and flying cars"
-      : "Abstract digital art with vibrant colors and geometric shapes",
-    date: i % 3 === 0 ? "2 hours ago" : i % 5 === 0 ? "Yesterday" : "Last week"
+    prompt:
+      i % 2 === 0
+        ? "A futuristic cityscape with neon lights and flying cars"
+        : "Abstract digital art with vibrant colors and geometric shapes",
+    date:
+      i % 3 === 0 ? "2 hours ago" : i % 5 === 0 ? "Yesterday" : "Last week",
   }));
 
   return (
@@ -75,7 +77,7 @@ export default function Library() {
           >
             <Grid className="w-5 h-5" />
           </motion.button>
-          
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -88,7 +90,7 @@ export default function Library() {
           >
             <LayoutGrid className="w-5 h-5" />
           </motion.button>
-          
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -118,7 +120,7 @@ export default function Library() {
           >
             <VivaMediaCard
               id={item.id}
-              type={item.type}
+              type={item.type as "image" | "video"}
               src={item.src}
               prompt={item.prompt}
               date={item.date}
