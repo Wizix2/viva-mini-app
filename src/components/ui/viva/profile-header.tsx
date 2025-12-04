@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { User, Mail, ExternalLink } from 'lucide-react';
-import Image from 'next/image';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { User, Mail, ExternalLink } from "lucide-react";
+import Image from "next/image";
 
 interface ProfileHeaderProps {
   username?: string;
@@ -18,11 +18,11 @@ export function ProfileHeader({
   fullName,
   avatarUrl,
   telegramId,
-  className = ""
+  className = "",
 }: ProfileHeaderProps) {
   const [imageError, setImageError] = useState(false);
 
-  // ✔ FIXED easing — теперь Framer Motion принимает этот формат
+  // ✔ SAFE easing for new Framer Motion (string only)
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -30,9 +30,9 @@ export function ProfileHeader({
       y: 0,
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1] // easeOut эквивалент
-      }
-    }
+        ease: "easeOut", // <-- безопасный вариант, идеально работает
+      },
+    },
   };
 
   return (
@@ -43,7 +43,6 @@ export function ProfileHeader({
       className={`glass p-6 rounded-2xl ${className}`}
     >
       <div className="flex items-center gap-5">
-        
         {/* Avatar */}
         <div className="relative">
           <div className="w-24 h-24 rounded-xl overflow-hidden bg-black/30 border border-white/10 shadow-lg">
@@ -63,7 +62,7 @@ export function ProfileHeader({
             )}
           </div>
 
-          {/* Premium indicator */}
+          {/* PRO badge */}
           <div className="absolute -bottom-2 -right-2 bg-viva-yellow text-black text-xs font-bold px-2 py-1 rounded-full">
             PRO
           </div>
@@ -71,7 +70,9 @@ export function ProfileHeader({
 
         {/* User info */}
         <div className="flex-1">
-          <h2 className="text-2xl font-bold text-white">{fullName || username}</h2>
+          <h2 className="text-2xl font-bold text-white">
+            {fullName || username}
+          </h2>
 
           <div className="flex items-center text-white/60 mt-1 gap-2">
             <User className="w-4 h-4" />
@@ -98,4 +99,5 @@ export function ProfileHeader({
 }
 
 export default ProfileHeader;
+
 
