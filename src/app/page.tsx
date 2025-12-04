@@ -11,35 +11,45 @@ import {
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
-
-  // REQUIRED state for model selection
-  const [selectedModel, setSelectedModel] = useState("model-1");
-
-  // REQUIRED list of available models
-  const models = [
-    {
-      id: "model-1",
-      name: "Standard Motion",
-      description: "Balanced quality and speed",
-      creditCost: 1,
-    },
-    {
-      id: "model-2",
-      name: "HD Motion",
-      description: "Sharper details, slower generation",
-      creditCost: 2,
-    },
-    {
-      id: "model-3",
-      name: "Cinematic Motion",
-      description: "Maximum smoothness and clarity",
-      creditCost: 3,
-    },
-  ];
+  const [selectedModel, setSelectedModel] = useState("stable-xl");
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Локальный список моделей – по структуре совпадает с Model в VivaModelSelect
+  const models = [
+    {
+      id: "stable-xl",
+      name: "Stable XL",
+      description: "High-quality animation with excellent details.",
+      creditCost: 100,
+      icon: "✨",
+      popular: true,
+    },
+    {
+      id: "sd-turbo",
+      name: "SD Turbo",
+      description: "Fast generation with good quality.",
+      creditCost: 60,
+      icon: "🚀",
+      fast: true,
+    },
+    {
+      id: "realistic-vision",
+      name: "Realistic Vision",
+      description: "Photorealistic motion and smooth face details.",
+      creditCost: 120,
+      icon: "📸",
+    },
+    {
+      id: "anime-style",
+      name: "Anime Style",
+      description: "Expressive anime-style motion for portraits.",
+      creditCost: 80,
+      icon: "🎨",
+    },
+  ];
 
   if (!mounted) {
     return (
@@ -69,20 +79,19 @@ export default function HomePage() {
 
       {/* SETTINGS PANEL */}
       <div className="grid md:grid-cols-2 gap-8">
+        {/* Left */}
         <div className="space-y-6">
-
-          {/* FIXED: VivaModelSelect now gets correct props */}
+          {/* VivaModelSelect с корректными пропсами */}
           <VivaModelSelect
             models={models}
-            selected={selectedModel}
-            onSelect={(id) => setSelectedModel(id)}
+            onModelChange={(id) => setSelectedModel(id)}
           />
 
           <VivaResolutionSelect />
           <VivaDurationSelect />
         </div>
 
-        {/* Feature cards */}
+        {/* Right: Feature Cards */}
         <div className="space-y-4">
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -90,7 +99,9 @@ export default function HomePage() {
           >
             <Flame className="w-7 h-7 text-orange-400" />
             <div>
-              <h3 className="text-lg font-semibold text-white">High-Quality Motion</h3>
+              <h3 className="text-lg font-semibold text-white">
+                High-Quality Motion
+              </h3>
               <p className="text-white/60 text-sm">
                 Smooth, realistic animation based on your photo.
               </p>
@@ -103,8 +114,12 @@ export default function HomePage() {
           >
             <Zap className="w-7 h-7 text-blue-400" />
             <div>
-              <h3 className="text-lg font-semibold text-white">Fast Processing</h3>
-              <p className="text-white/60 text-sm">Generation takes less than 10 seconds.</p>
+              <h3 className="text-lg font-semibold text-white">
+                Fast Processing
+              </h3>
+              <p className="text-white/60 text-sm">
+                Generation takes less than 10 seconds.
+              </p>
             </div>
           </motion.div>
 
@@ -114,7 +129,9 @@ export default function HomePage() {
           >
             <Lightbulb className="w-7 h-7 text-yellow-300" />
             <div>
-              <h3 className="text-lg font-semibold text-white">Smart Enhancement</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Smart Enhancement
+              </h3>
               <p className="text-white/60 text-sm">
                 AI improves lighting, colors, and sharpness.
               </p>
@@ -129,7 +146,7 @@ export default function HomePage() {
         whileTap={{ scale: 0.95 }}
         className="w-full py-4 bg-yellow-400 text-black rounded-xl font-bold text-lg"
       >
-        Generate Animation
+        Generate Animation (model: {selectedModel})
       </motion.button>
     </div>
   );
