@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Fire, Zap, Lightbulb } from "lucide-react";
+import { Sparkles, Flame, Zap, Lightbulb } from "lucide-react";
 import {
   VivaResolutionSelect,
   VivaDurationSelect,
