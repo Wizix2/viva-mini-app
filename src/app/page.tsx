@@ -12,11 +12,26 @@ import {
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
 
-  // MODEL SELECT STATE
+  // МОДЕЛИ В ФОРМАТЕ, КОТОРЫЙ ЖДЁТ VivaModelSelect (Model[])
   const models = [
-    { id: "realistic", label: "Realistic" },
-    { id: "cinematic", label: "Cinematic" },
-    { id: "anime", label: "Anime" },
+    {
+      id: "realistic",
+      name: "Realistic",
+      description: "Photorealistic animation with natural motion.",
+      creditCost: 1,
+    },
+    {
+      id: "cinematic",
+      name: "Cinematic",
+      description: "Film-style look with dramatic lighting.",
+      creditCost: 2,
+    },
+    {
+      id: "anime",
+      name: "Anime",
+      description: "Stylized animation inspired by anime.",
+      creditCost: 1,
+    },
   ];
 
   const [selectedModel, setSelectedModel] = useState("realistic");
@@ -55,8 +70,7 @@ export default function HomePage() {
       <div className="grid md:grid-cols-2 gap-8">
         {/* LEFT SIDE */}
         <div className="space-y-6">
-
-          {/* FIXED: VivaModelSelect now receives required props */}
+          {/* VivaModelSelect теперь получает нужные пропсы */}
           <VivaModelSelect
             models={models}
             value={selectedModel}
