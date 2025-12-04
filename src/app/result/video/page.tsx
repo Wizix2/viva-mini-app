@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 import { ArtlistStatusResponse, MODEL_DESCRIPTIONS } from "@/types/artlist";
 import { 
   Layout, 
@@ -60,7 +60,7 @@ export default function VideoResultPage() {
   }, [id, router]);
 
   useEffect(() => {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
 
     // Set up main button for sharing when video is ready
     if (status?.status === 'done' && status.videoUrl) {

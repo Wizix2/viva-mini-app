@@ -1,10 +1,10 @@
 import { initData } from '@telegram-apps/sdk-react';
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 import { TelegramUser } from "@/services/telegram";
 
 // Test function to verify type compatibility
 export function testTelegramTypes() {
-  if (isTelegramWebApp()) {
+  if (isTelegram()) {
     // @ts-ignore - Just for testing
     const user = initData.user;
     

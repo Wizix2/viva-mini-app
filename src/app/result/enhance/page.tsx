@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 import { 
   Layout, 
   SkeletonResultPreview, 
@@ -58,7 +58,7 @@ export default function EnhanceResultPage() {
   }, [id, router]);
 
   useEffect(() => {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
 
     // Настраиваем главную кнопку в Telegram
     if (status?.status === 'done' && status.image_url) {

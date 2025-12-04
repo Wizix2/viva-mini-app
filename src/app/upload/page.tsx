@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 import { ArtlistModel, MODEL_DESCRIPTIONS } from "@/types/artlist";
 import { Layout, ErrorState, ConfirmModal, UploadCard, UploadStepIndicator, UploadPreviewFrame } from "@/components/viva";
 
@@ -33,7 +33,7 @@ export default function UploadPage() {
 
   // Управление главной кнопкой Telegram
   useEffect(() => {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     
     if (preview) {
       setupMainButton(

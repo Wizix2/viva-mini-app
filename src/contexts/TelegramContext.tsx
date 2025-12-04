@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import TelegramService, { TelegramUser } from "@/services/telegram";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 import { TelegramUserFixed } from "@/types/telegram";
 
 interface TelegramContextType {
@@ -32,7 +32,7 @@ export const TelegramProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // Инициализация Telegram Mini Apps
     try {
-      if (!isTelegramWebApp()) {
+      if (!isTelegram()) {
         // Работаем в браузере без Telegram SDK
         setUser(null);
         setIsReady(true);

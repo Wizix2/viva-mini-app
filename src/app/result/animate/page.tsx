@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 import { 
   Layout, 
   SkeletonResultPreview, 
@@ -61,7 +61,7 @@ export default function AnimateResultPage() {
   }, [id, router]);
 
   useEffect(() => {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
 
     // Настраиваем главную кнопку в Telegram
     if (status?.status === 'done' && status.result?.video_url) {

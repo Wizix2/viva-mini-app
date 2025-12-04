@@ -12,7 +12,7 @@ import { TelegramProvider } from '@/contexts/TelegramContext';
 import { DIDProvider } from '@/contexts/DIDContext';
 import { useEffect } from 'react';
 import { setLocale } from '@/core/i18n/locale';
-import { isTelegramWebApp } from '@/lib/isTelegram';
+import { isTelegram } from '@/lib/isTelegram';
 
 export function Providers({ children }: PropsWithChildren) {
   const lp = useLaunchParams();
@@ -21,7 +21,7 @@ export function Providers({ children }: PropsWithChildren) {
 
   // Set the user locale.
   useEffect(() => {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     initDataUser && setLocale(initDataUser.language_code);
   }, [initDataUser]);
 

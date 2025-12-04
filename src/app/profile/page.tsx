@@ -9,7 +9,7 @@ import {
   ProfileSettings
 } from "@/components/ui/viva";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 
 export default function Profile() {
   const { user } = useTelegram();
@@ -21,7 +21,7 @@ export default function Profile() {
   
   // Load user data from Telegram if available
   useEffect(() => {
-    if (isTelegramWebApp() && (user as any)?.photo_url) {
+    if (isTelegram() && (user as any)?.photo_url) {
       setAvatarUrl((user as any).photo_url);
     }
     

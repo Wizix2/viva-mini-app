@@ -8,10 +8,10 @@ import VivaGlass from "./VivaGlass";
 
 interface VivaNavbarProps {
   toggleSidebar?: () => void;
-  isTelegramWebApp?: boolean;
+  isTelegram?: boolean;
 }
 
-export function VivaNavbar({ toggleSidebar, isTelegramWebApp = false }: VivaNavbarProps) {
+export function VivaNavbar({ toggleSidebar, isTelegram = false }: VivaNavbarProps) {
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,7 +44,7 @@ export function VivaNavbar({ toggleSidebar, isTelegramWebApp = false }: VivaNavb
       transition={{ duration: 0.3 }}
       className={`fixed top-0 left-0 right-0 z-20 h-16 glass-dark border-b viva-transition ${
         isScrolled ? 'shadow-lg border-white/10' : 'border-transparent'
-      } ${isTelegramWebApp ? 'safe-area-top' : ''}`}
+      } ${isTelegram ? 'safe-area-top' : ''}`}
     >
       <div className="flex items-center justify-between h-full w-full max-w-7xl mx-auto px-4 lg:px-6">
         <div className="flex items-center">

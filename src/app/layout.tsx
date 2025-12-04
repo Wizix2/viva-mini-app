@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isTelegramWebApp, setIsTelegramWebApp] = useState(false);
+  const [isTelegram, setisTelegram] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function RootLayout({
       tgWindow.Telegram &&
       tgWindow.Telegram.WebApp;
 
-    setIsTelegramWebApp(isTelegramApp);
+    setisTelegram(isTelegramApp);
 
     // Check if we're on mobile
     const checkIfMobile = () => {
@@ -105,7 +105,7 @@ export default function RootLayout({
           >
             <VivaNavbar
               toggleSidebar={toggleSidebar}
-              isTelegramWebApp={isTelegramWebApp}
+              isTelegram={isTelegram}
             />
 
             <div className="pt-20 px-4 md:px-6 lg:px-8 pb-16 max-w-7xl mx-auto">
@@ -113,7 +113,7 @@ export default function RootLayout({
             </div>
 
             {/* Telegram WebApp Bottom Navigation */}
-            {isTelegramWebApp && (
+            {isTelegram && (
               <div className="bottom-nav h-16 flex items-center justify-around px-4">
                 <motion.button
                   whileTap={{ scale: 0.95 }}

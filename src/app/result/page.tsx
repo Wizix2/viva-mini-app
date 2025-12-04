@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTelegram } from "@/contexts/TelegramContext";
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 
 // Теперь результат - просто URL видео
 
@@ -21,7 +21,7 @@ export default function ResultPage() {
       setVideoUrl(resultVideo);
     }
 
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
 
     // Настраиваем кнопку "Назад" в Telegram
     setupBackButton(true, () => {

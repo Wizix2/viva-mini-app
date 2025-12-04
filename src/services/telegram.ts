@@ -1,5 +1,5 @@
 import { initData, miniApp } from '@telegram-apps/sdk-react';
-import { isTelegramWebApp } from "@/lib/isTelegram";
+import { isTelegram } from "@/lib/isTelegram";
 
 // Тип для пользователя Telegram
 export interface TelegramUser {
@@ -16,7 +16,7 @@ export interface TelegramUser {
 export const TelegramService = {
   // Получение пользователя из initData
   getUser(): TelegramUser | null {
-    if (!isTelegramWebApp()) return null;
+    if (!isTelegram()) return null;
     
     try {
       // @ts-ignore - обходим проблему типов в SDK
@@ -47,7 +47,7 @@ export const TelegramService = {
 
   // Проверка авторизации
   isAuthenticated(): boolean {
-    if (!isTelegramWebApp()) return false;
+    if (!isTelegram()) return false;
     try {
       // @ts-ignore - обходим проблему типов в SDK
       return !!initData.user;
@@ -58,28 +58,28 @@ export const TelegramService = {
 
   // Закрытие приложения
   closeApp(): void {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     // @ts-ignore - обходим проблему типов в SDK
     miniApp.close();
   },
 
   // Показать всплывающее сообщение
   showAlert(message: string): Promise<void> {
-    if (!isTelegramWebApp()) return Promise.resolve();
+    if (!isTelegram()) return Promise.resolve();
     // @ts-ignore - обходим проблему типов в SDK
     return miniApp.showAlert(message);
   },
 
   // Поделиться контентом
   shareContent(text: string): Promise<boolean> {
-    if (!isTelegramWebApp()) return Promise.resolve(false);
+    if (!isTelegram()) return Promise.resolve(false);
     // @ts-ignore - обходим проблему типов в SDK
     return miniApp.shareContent(text);
   },
 
   // Настройка кнопки "Назад"
   setupBackButton(isVisible: boolean, callback?: () => void): void {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     // @ts-ignore - обходим проблему типов в SDK
     miniApp.BackButton.isVisible = isVisible;
     if (callback) {
@@ -95,7 +95,7 @@ export const TelegramService = {
     isActive: boolean = true, 
     callback?: () => void
   ): void {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     // @ts-ignore - обходим проблему типов в SDK
     miniApp.MainButton.text = text;
     // @ts-ignore - обходим проблему типов в SDK
@@ -111,7 +111,7 @@ export const TelegramService = {
 
   // Показать индикатор загрузки на основной кнопке
   showMainButtonLoader(isLoading: boolean): void {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     if (isLoading) {
       // @ts-ignore - обходим проблему типов в SDK
       miniApp.MainButton.showProgress();
@@ -123,7 +123,7 @@ export const TelegramService = {
 
   // Установка темы
   setupTheme(): void {
-    if (!isTelegramWebApp()) return;
+    if (!isTelegram()) return;
     // Получаем цвета из Telegram и применяем их к нашей теме
     // @ts-ignore - обходим проблему типов в SDK
     const colors = miniApp.themeParams;

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || Date.now().toString();
 
 // Function to check if request is from Telegram WebApp
-function isTelegramWebApp(request: NextRequest): boolean {
+function isTelegram(request: NextRequest): boolean {
   // Check if URL contains tgWebApp parameter
   const url = request.nextUrl.toString();
   if (url.includes('tgWebApp')) {
@@ -36,7 +36,7 @@ export function middleware(request: NextRequest) {
   }
   
   // If it's a Telegram WebApp request and doesn't already have a version parameter
-  if (isTelegramWebApp(request) && !request.nextUrl.searchParams.has('v')) {
+  if (isTelegram(request) && !request.nextUrl.searchParams.has('v')) {
     const url = request.nextUrl.clone();
     url.searchParams.set('v', APP_VERSION);
     
