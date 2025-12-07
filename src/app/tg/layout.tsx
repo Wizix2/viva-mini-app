@@ -1,12 +1,13 @@
-"use client";
+export const metadata = {
+  title: "VIVA Mini App",
+};
 
-export default function TgLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
-    <html>
-      <body style={{ background: "#0B0B0F", margin: 0 }}>
+    <html lang="en">
+      <body style={{ margin: 0, background: "#000", color: "#fff" }}>
         {children}
       </body>
     </html>
   );
 }
-
