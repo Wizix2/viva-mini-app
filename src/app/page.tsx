@@ -1,5 +1,7 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import TgPage from './tg/page';
 
 export default function Home() {
-  redirect('/tg');
+  return <TgPage />;
 }
