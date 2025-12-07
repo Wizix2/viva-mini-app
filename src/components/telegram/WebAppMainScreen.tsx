@@ -44,7 +44,6 @@ export default function WebAppMainScreen() {
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
-
     const f = e.target.files[0];
     setFile(f);
 
@@ -67,78 +66,68 @@ export default function WebAppMainScreen() {
     if (!canGenerate || isGenerating) return;
 
     setIsGenerating(true);
-
     try {
       const fakeId = `demo-${Date.now()}`;
       const type: "image" | "video" =
         group === "image" ? "image" : "video";
 
       if (tg?.MainButton) {
-        try {
-          tg.MainButton.text = "Generating...";
-          tg.MainButton.isVisible = true;
-          tg.MainButton.showProgress?.();
-        } catch {}
+        tg.MainButton.text = "Generating...";
+        tg.MainButton.isVisible = true;
+        tg.MainButton.showProgress?.();
       }
 
       await new Promise((res) => setTimeout(res, 800));
-
       goToResult({ id: fakeId, type });
     } finally {
       setIsGenerating(false);
       if (tg?.MainButton) {
-        try {
-          tg.MainButton.hideProgress?.();
-          tg.MainButton.isVisible = false;
-        } catch {}
+        tg.MainButton.hideProgress?.();
+        tg.MainButton.isVisible = false;
       }
     }
   };
 
-  // 👉 выбираем правильные пресеты в зависимости от режима
-  const getPresets = () => {
-    if (group === "image") {
-      return tab === "txt2img"
+  const presets =
+    group === "image"
+      ? tab === "txt2img"
         ? IMAGE_TEXT_PRESETS
-        : IMAGE_IMAGE_PRESETS;
-    }
-
-    return tab === "txt2video"
+        : IMAGE_IMAGE_PRESETS
+      : tab === "txt2video"
       ? VIDEO_TEXT_PRESETS
       : VIDEO_IMAGE_PRESETS;
-  };
-
-  const presets = getPresets();
 
   return (
-    <div className="min-h-screen bg-[#0E0B19] text-white pb-24 max-w-md mx-auto">
+    <div className="min-h-screen bg-[#0E0B19] text-white max-w-md mx-auto pb-24">
 
-      {/* HEADER */}
-      <header className="flex items-center justify-between p-4 bg-[#171322] border-b border-[#1F1A2E]">
-        <div className="p-2 rounded-lg hover:bg-[#2A243B]">≡</div>
-        <h1 className="text-xl font-bold text-[#FACC15]">VIVA</h1>
-        <div className="px-3 py-1 bg-[#1A142B] rounded-full text-xs text-[#FACC15]">
+      {/* CLEAN ARTIST-STYLE HEADER */}
+      <header className="px-5 py-4 bg-[#0D0A16] border-b border-[#1A1528] shadow-md flex justify-between items-center">
+        <span className="text-lg font-semibold tracking-wide text-[#FACC15]">
+          VIVA
+        </span>
+        <span className="px-3 py-1 bg-[#1A1528] rounded-full text-xs text-[#FACC15] shadow">
           120 credits
-        </div>
+        </span>
       </header>
 
-      <div className="p-4 space-y-6">
+      <div className="p-5 space-y-8">
+
         {/* GROUP SWITCHER */}
-        <div className="bg-[#171322] rounded-xl p-1 flex shadow-lg">
+        <div className="bg-[#171322] rounded-xl p-1 flex shadow-inner shadow-black/20">
           {GROUPS.map((g) => (
             <button
               key={g.id}
               onClick={() => {
                 setGroup(g.id as any);
-                const first = TABS[g.id as "image"]["0"];
+                const first = TABS[g.id as "image"][0];
                 setTab(first.id);
                 resetInputs();
               }}
               className={
-                "flex-1 py-3 rounded-lg text-sm font-medium transition " +
+                "flex-1 py-3 rounded-lg text-sm font-medium transition-all " +
                 (group === g.id
-                  ? "bg-[#FACC15] text-black"
-                  : "text-gray-400")
+                  ? "bg-[#FACC15] text-black shadow"
+                  : "text-gray-400 hover:bg-[#1F1A2E]")
               }
             >
               {g.label}
@@ -156,13 +145,15 @@ export default function WebAppMainScreen() {
                 resetInputs();
               }}
               className={
-                "relative py-3 px-4 font-medium text-sm " +
-                (tab === t.id ? "text-white" : "text-gray-400")
+                "relative py-3 px-4 font-medium transition-all text-sm " +
+                (tab === t.id
+                  ? "text-[#FACC15]"
+                  : "text-gray-400 hover:text-gray-200")
               }
             >
               {t.label}
               {tab === t.id && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#FACC15]" />
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#FACC15] rounded-full" />
               )}
             </button>
           ))}
@@ -173,11 +164,8 @@ export default function WebAppMainScreen() {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Describe what you want to create..."
-            className="
-              w-full h-32 p-4 bg-[#171322] rounded-xl border border-[#2B2342]
-              focus:border-[#FACC15] outline-none resize-none shadow-lg
-            "
+            placeholder="Describe what you want to create…"
+            className="w-full h-32 p-4 bg-[#171322] rounded-xl border border-[#2B2342] focus:border-[#FACC15] shadow-inner shadow-black/30 outline-none resize-none"
           />
         )}
 
@@ -185,21 +173,21 @@ export default function WebAppMainScreen() {
         {currentTab.requiresImage && (
           <div
             onClick={() => inputRef.current?.click()}
-            className="
-              w-full p-6 border-2 border-dashed border-[#FACC15]/40 rounded-xl
-              bg-[#171322] text-center cursor-pointer shadow-lg
-              hover:border-[#FACC15]
-            "
+            className="w-full p-6 border-2 border-dashed border-[#FACC15]/40 rounded-xl bg-[#171322] text-center cursor-pointer shadow-inner hover:border-[#FACC15]"
           >
             {preview ? (
-              <img src={preview} className="w-full rounded-lg shadow-md" />
+              <img
+                src={preview}
+                className="w-full rounded-lg shadow-lg shadow-black/30"
+              />
             ) : (
               <>
                 <div className="text-[#FACC15] text-3xl mb-3">📁</div>
                 <p className="text-white font-medium">Upload image</p>
-                <p className="text-gray-400 text-sm">Click to select</p>
+                <p className="text-gray-400 text-sm">Tap to select</p>
               </>
             )}
+
             <input
               type="file"
               ref={inputRef}
@@ -215,31 +203,28 @@ export default function WebAppMainScreen() {
           onClick={handleGenerate}
           disabled={!canGenerate || isGenerating}
           className={
-            "w-full py-4 rounded-xl font-semibold text-lg shadow-lg " +
+            "w-full py-4 rounded-xl text-lg font-semibold transition-all shadow-lg " +
             (canGenerate && !isGenerating
-              ? "text-[#0E0B19] bg-gradient-to-r from-[#FACC15] to-[#FBBF24]"
+              ? "text-[#0E0B19] bg-gradient-to-r from-[#FACC15] to-[#FBBF24] active:scale-[0.98]"
               : "bg-gray-600 text-gray-300 cursor-not-allowed")
           }
         >
           {isGenerating ? "Generating..." : "Generate"}
         </button>
 
-        {/* PRESETS */}
+        {/* EXAMPLES */}
         {presets.length > 0 && (
-          <div className="bg-[#171322] p-4 rounded-xl shadow-lg">
-            <h3 className="text-[#FACC15] font-medium mb-3">
+          <div className="bg-[#171322] p-5 rounded-xl shadow-inner shadow-black/20">
+            <h3 className="text-[#FACC15] font-medium mb-4 text-lg tracking-wide">
               Examples
             </h3>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {presets.map((ex) => (
                 <button
                   key={ex.label}
                   onClick={() => setPrompt(ex.prompt)}
-                  className="
-                    px-4 py-2 bg-[#1A142B] border border-[#2B2342]
-                    rounded-lg text-sm hover:bg-[#2A243B]
-                  "
+                  className="px-4 py-2 bg-[#1A142B] border border-[#2B2342] rounded-lg text-sm hover:bg-[#2A243B] transition-all"
                 >
                   {ex.label}
                 </button>
