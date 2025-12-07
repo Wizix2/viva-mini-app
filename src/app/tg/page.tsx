@@ -5,42 +5,32 @@ import { useEffect } from "react";
 export default function TgPage() {
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
-
-    if (!tg) {
-      console.warn("Telegram WebApp not found");
-      return;
+    if (tg) {
+      tg.ready();
+      tg.expand();
     }
-
-    tg.ready();
-    tg.expand();
   }, []);
 
   return (
     <div style={{ padding: 20 }}>
-      <h1 style={{ fontSize: 22, marginBottom: 10 }}>
-        VIVA Photo Animator — TG Mini App
-      </h1>
-
-      <p style={{ opacity: 0.8 }}>
-        Telegram version successfully isolated.
-      </p>
+      <h1 style={{ color: "#fff" }}>VIVA Photo Animator — Mini App</h1>
 
       <button
         style={{
           marginTop: 20,
-          padding: "14px 20px",
+          padding: "12px 20px",
+          width: "100%",
+          fontWeight: "bold",
           background: "#FFD400",
-          color: "#000",
           borderRadius: 10,
           border: "none",
-          fontWeight: "bold",
-          width: "100%",
         }}
-        onClick={() => alert("Telegram works!")}
+        onClick={() => alert("Mini App Works!")}
       >
         Test Telegram Button
       </button>
     </div>
   );
 }
+
 
