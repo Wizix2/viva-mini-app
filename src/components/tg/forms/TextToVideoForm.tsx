@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { GENERATION_PRICES } from '@/types/modes';
 
 interface TextToVideoFormProps {
-  onSubmit: (text: string) => Promise<void>;
+  onSubmit: (text: string) => Promise<{ status: string; taskId?: string; message?: string }>;
 }
 
 export default function TextToVideoForm({ onSubmit }: TextToVideoFormProps) {

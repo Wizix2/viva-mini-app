@@ -81,7 +81,7 @@ function StatusBadge({ status }: { status: HistoryItem['status'] }) {
   );
 }
 
-function getModeName(subMode: SubMode): string {
+function getModeName(subMode: string): string {
   switch (subMode) {
     case 'text-image':
       return 'Text → Image';

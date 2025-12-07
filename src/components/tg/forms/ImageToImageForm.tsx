@@ -6,7 +6,7 @@ import { GENERATION_PRICES } from '@/types/modes';
 import UploadZone from './UploadZone';
 
 interface ImageToImageFormProps {
-  onSubmit: (file: File) => Promise<void>;
+  onSubmit: (file: File) => Promise<{ status: string; taskId?: string; message?: string }>;
 }
 
 export default function ImageToImageForm({ onSubmit }: ImageToImageFormProps) {
