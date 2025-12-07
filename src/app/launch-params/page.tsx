@@ -1,33 +1,22 @@
-'use client';
+"use client";
 
-import { useLaunchParams } from '@telegram-apps/sdk-react';
-import { List } from '@telegram-apps/telegram-ui';
-
-import { DisplayData } from '@/components/DisplayData/DisplayData';
-import { Page } from '@/components/Page';
+import { useEffect, useState } from "react";
 
 export default function LaunchParamsPage() {
-  const lp = useLaunchParams();
+  const [params, setParams] = useState<any>(null);
+
+  useEffect(() => {
+    const tg = (window as any).Telegram?.WebApp;
+    if (tg) setParams(tg.initDataUnsafe);
+  }, []);
 
   return (
-    <Page>
-      <List>
-        <DisplayData
-          rows={[
-            { title: 'tgWebAppPlatform', value: lp.tgWebAppPlatform },
-            { title: 'tgWebAppShowSettings', value: lp.tgWebAppShowSettings },
-            { title: 'tgWebAppVersion', value: lp.tgWebAppVersion },
-            { title: 'tgWebAppBotInline', value: lp.tgWebAppBotInline },
-            { title: 'tgWebAppStartParam', value: lp.tgWebAppStartParam },
-            { title: 'tgWebAppData', type: 'link', value: '/init-data' },
-            {
-              title: 'tgWebAppThemeParams',
-              type: 'link',
-              value: '/theme-params',
-            },
-          ]}
-        />
-      </List>
-    </Page>
+    <div style={{ padding: 20 }}>
+      <h1>Launch Params</h1>
+      <pre style={{ marginTop: 20 }}>
+        {JSON.stringify(params, null, 2)}
+      </pre>
+    </div>
   );
 }
+
