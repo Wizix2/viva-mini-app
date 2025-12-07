@@ -1,9 +1,10 @@
+// global.d.ts
+export {};
+
 declare global {
-  interface TelegramUser {
-    photo_url?: string;
-    allows_write_to_pm?: boolean;
-    [key: string]: any;
+  interface Window {
+    Telegram?: {
+      WebApp?: any;
+    };
   }
 }
-
-export {};
