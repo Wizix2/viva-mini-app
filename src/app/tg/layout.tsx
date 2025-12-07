@@ -1,13 +1,15 @@
-export const metadata = {
-  title: "VIVA Mini App",
-};
+'use client';
 
-export default function RootLayout({ children }) {
+import './tg.css';
+
+export default function TelegramLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body style={{ margin: 0, background: "#000", color: "#fff" }}>
-        {children}
-      </body>
-    </html>
+    <div className="min-h-screen bg-dark">
+      {children}
+    </div>
   );
 }

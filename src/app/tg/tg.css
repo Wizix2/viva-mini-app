@@ -1,0 +1,61 @@
+.mode-selector {
+  display: flex;
+  margin-bottom: 20px;
+  background-color: rgba(42, 42, 42, 0.5);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.mode-selector button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.mode-selector button.active {
+  background-color: rgba(255, 212, 0, 0.1);
+  color: #FFD400;
+}
+
+.examples-section {
+  margin-top: 32px;
+}
+
+.examples-section h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.success-message {
+  background-color: rgba(39, 174, 96, 0.1);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  color: #2ecc71;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
