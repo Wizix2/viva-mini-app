@@ -1,8 +1,7 @@
-const tg = useTelegram();
+'use client';
 
-useEffect(() => {
-  if (!tg) return;
-  
-  tg.ready?.();
-  tg.expand?.();
-}, [tg]);
+import TgPage from './tg/page';
+
+export default function Page() {
+  return <TgPage />;
+}
