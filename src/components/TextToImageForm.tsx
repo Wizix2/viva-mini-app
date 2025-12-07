@@ -1,18 +1,16 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GENERATION_PRICES } from '@/types/modes';
 
-interface TextToVideoFormProps {
+interface TextToImageFormProps {
   onSubmit: (text: string) => Promise<void>;
-  onExampleSelect?: (text: string) => void;
 }
 
-export default function TextToVideoForm({ onSubmit, onExampleSelect }: TextToVideoFormProps) {
+export default function TextToImageForm({ onSubmit }: TextToImageFormProps) {
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,28 +24,9 @@ export default function TextToVideoForm({ onSubmit, onExampleSelect }: TextToVid
     }
   };
 
-  // Метод для установки текста извне (для примеров)
-  const setText2 = (newText: string) => {
-    setText(newText);
-    if (onExampleSelect) {
-      onExampleSelect(newText);
-    }
-    // Фокус на текстовое поле
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  };
-
-  // Экспортируем метод через ref
-  if (typeof window !== 'undefined') {
-    // @ts-ignore - добавляем метод для доступа извне
-    window.setTextToVideoText = setText2;
-  }
-
   return (
     <form onSubmit={handleSubmit}>
       <textarea
-        ref={textareaRef}
         className="tg-textarea"
         placeholder="Describe what you want to create..."
         value={text}
@@ -62,7 +41,7 @@ export default function TextToVideoForm({ onSubmit, onExampleSelect }: TextToVid
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        {isLoading ? 'Generating...' : `Generate ${GENERATION_PRICES['text-video']} credits`}
+        {isLoading ? 'Generating...' : `Generate ${GENERATION_PRICES['text-image']} credits`}
       </motion.button>
     </form>
   );

@@ -3,6 +3,7 @@ declare global {
     Telegram?: {
       WebApp?: TelegramWebApp;
     };
+    setTextToVideoText?: (text: string) => void;
   }
 }
 

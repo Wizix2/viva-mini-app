@@ -1,15 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import useTelegram from '@/hooks/useTelegram';
 import Header from '@/components/Header';
 import TabSwitcher from '@/components/TabSwitcher';
 import ModeSelector from '@/components/ModeSelector';
+import TextToImageForm from '@/components/TextToImageForm';
+import ImageToImageForm from '@/components/ImageToImageForm';
 import TextToVideoForm from '@/components/TextToVideoForm';
 import ImageToVideoForm from '@/components/ImageToVideoForm';
 import ExamplesSection from '@/components/ExamplesSection';
 import SuccessMessage from '@/components/SuccessMessage';
+import { MainMode, SubMode } from '@/types/modes';
 
 const EXAMPLES = [
   'Beautiful cinematic portrait',
@@ -24,13 +27,71 @@ const EXAMPLES = [
 
 export default function TgPage() {
   const { tg } = useTelegram();
-  const [activeTab, setActiveTab] = useState(0);
-  const [activeMode, setActiveMode] = useState(0);
+  const [mode, setMode] = useState<MainMode>('video');
+  const [subMode, setSubMode] = useState<SubMode>('text-video');
   const [success, setSuccess] = useState(false);
   const [taskId, setTaskId] = useState('');
 
+  // Обработчик изменения основного режима
+  const handleModeChange = (newMode: MainMode) => {
+    setMode(newMode);
+    // Автоматически устанавливаем подрежим в зависимости от основного режима
+    if (newMode === 'image') {
+      setSubMode('text-image');
+    } else {
+      setSubMode('text-video');
+    }
+  };
+
+  // Обработчик изменения подрежима
+  const handleSubModeChange = (newSubMode: SubMode) => {
+    setSubMode(newSubMode);
+  };
+
+  // Text to Image submission
+  const handleTextToImageSubmit = async (text: string) => {
+    try {
+      const response = await fetch('/api/generate/text-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      });
+      
+      const data = await response.json();
+      if (data.status === 'ok') {
+        setTaskId(data.taskId);
+        setSuccess(true);
+      }
+    } catch (error) {
+      console.error('Error generating image:', error);
+    }
+  };
+
+  // Image to Image submission
+  const handleImageToImageSubmit = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      const response = await fetch('/api/generate/image-image', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const data = await response.json();
+      if (data.status === 'ok') {
+        setTaskId(data.taskId);
+        setSuccess(true);
+      }
+    } catch (error) {
+      console.error('Error generating image:', error);
+    }
+  };
+
   // Text to Video submission
-  const handleTextSubmit = async (text: string) => {
+  const handleTextToVideoSubmit = async (text: string) => {
     try {
       const response = await fetch('/api/generate/text-video', {
         method: 'POST',
@@ -51,7 +112,7 @@ export default function TgPage() {
   };
 
   // Image to Video submission
-  const handleImageSubmit = async (file: File) => {
+  const handleImageToVideoSubmit = async (file: File) => {
     try {
       const formData = new FormData();
       formData.append('image', file);
@@ -73,13 +134,41 @@ export default function TgPage() {
 
   // Handle example selection
   const handleExampleSelect = (example: string) => {
-    if (activeMode === 0) {
-      // For Text to Video mode, set the example as the text
-      // This would be implemented by passing a ref to TextToVideoForm
-      // and setting the value, but for simplicity we'll just submit directly
-      handleTextSubmit(example);
+    if (subMode === 'text-image' || subMode === 'text-video') {
+      // Для текстовых режимов вставляем текст в форму
+      if (typeof window !== 'undefined') {
+        if (subMode === 'text-video' && window.setTextToVideoText) {
+          window.setTextToVideoText(example);
+        } else {
+          // Для других форм можно реализовать аналогично
+          // или напрямую отправить запрос
+          if (subMode === 'text-image') {
+            handleTextToImageSubmit(example);
+          } else if (subMode === 'text-video') {
+            handleTextToVideoSubmit(example);
+          }
+        }
+      }
+    }
+    // Для режимов с изображениями можно реализовать применение пресет-стилей
+  };
+
+  // Определяем, какие подрежимы показывать в зависимости от основного режима
+  const getSubModes = () => {
+    if (mode === 'image') {
+      return ['Text → Image', 'Image → Image'];
+    } else {
+      return ['Text → Video', 'Image → Video'];
     }
   };
+
+  // Инициализация Telegram WebApp
+  useEffect(() => {
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+  }, [tg]);
 
   return (
     <motion.div
@@ -92,29 +181,37 @@ export default function TgPage() {
       <div className="p-4">
         <TabSwitcher 
           tabs={['Image', 'Video']} 
-          activeTab={activeTab} 
-          onChange={setActiveTab} 
+          activeTab={mode} 
+          onChange={handleModeChange} 
         />
         
         <ModeSelector 
-          modes={['Text → Video', 'Image → Video']} 
-          activeMode={activeMode} 
-          onChange={setActiveMode} 
+          modes={getSubModes()} 
+          activeMode={subMode} 
+          onChange={handleSubModeChange} 
         />
         
         {success ? (
           <SuccessMessage message="Task created successfully!" />
         ) : (
           <>
-            {activeMode === 0 ? (
-              <TextToVideoForm onSubmit={handleTextSubmit} />
-            ) : (
-              <ImageToVideoForm onSubmit={handleImageSubmit} />
+            {subMode === 'text-image' && (
+              <TextToImageForm onSubmit={handleTextToImageSubmit} />
+            )}
+            {subMode === 'image-image' && (
+              <ImageToImageForm onSubmit={handleImageToImageSubmit} />
+            )}
+            {subMode === 'text-video' && (
+              <TextToVideoForm onSubmit={handleTextToVideoSubmit} />
+            )}
+            {subMode === 'image-video' && (
+              <ImageToVideoForm onSubmit={handleImageToVideoSubmit} />
             )}
             
             <ExamplesSection 
               examples={EXAMPLES} 
-              onSelect={handleExampleSelect} 
+              onSelect={handleExampleSelect}
+              currentMode={subMode}
             />
           </>
         )}
