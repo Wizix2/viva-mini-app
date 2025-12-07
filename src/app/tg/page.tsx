@@ -17,7 +17,18 @@ import { MainMode, SubMode } from '@/types/modes';
 import { HistoryItem } from '@/types/history';
 
 export default function TgPage() {
-  const { tg } = useTelegram();
+  const tg = useTelegram();
+  
+  if (!tg) {
+    return (
+      <div className="min-h-screen bg-dark text-white flex items-center justify-center p-4">
+        <div className="text-center">
+          <h1 className="text-xl font-bold mb-2">VIVA Mini App</h1>
+          <p>Telegram WebApp не обнаружен. Откройте приложение через Telegram.</p>
+        </div>
+      </div>
+    );
+  }
   const [mode, setMode] = useState<MainMode>('video');
   const [subMode, setSubMode] = useState<SubMode>('text-video');
   const [history, setHistory] = useState<HistoryItem[]>([]);
@@ -121,10 +132,10 @@ export default function TgPage() {
   
   // Инициализация Telegram WebApp
   useEffect(() => {
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
+    if (!tg) return;
+    
+    tg.ready();
+    tg.expand();
   }, [tg]);
   
   return (
