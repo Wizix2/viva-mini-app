@@ -3,8 +3,11 @@
 import { useState, useRef, ChangeEvent } from "react";
 import { useTelegramWebApp } from "@/hooks/useTelegramWebApp";
 import { goToResult } from "@/lib/navigation/goToResult";
+
 import FadeIn from "./FadeIn";
 import SkeletonBlock from "./SkeletonBlock";
+import InspirationCard from "./InspirationCard";
+import { PRESET_EXAMPLES } from "./presets";
 
 export default function WebAppMainScreen() {
   const { tg, isReady } = useTelegramWebApp();
@@ -39,12 +42,12 @@ export default function WebAppMainScreen() {
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
-    const file = e.target.files[0];
-    setFile(file);
+    const f = e.target.files[0];
+    setFile(f);
 
     const reader = new FileReader();
     reader.onload = (ev) => setPreview(ev.target?.result as string);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(f);
   };
 
   const canGenerate =
@@ -52,7 +55,7 @@ export default function WebAppMainScreen() {
     (!currentTab.requiresImage || file);
 
   const handleGenerate = async () => {
-    if (!canGenerate) return;
+    if (!canGenerate || isGenerating) return;
 
     setIsGenerating(true);
 
@@ -66,6 +69,7 @@ export default function WebAppMainScreen() {
     setIsGenerating(false);
   };
 
+  // LOADING SKELETON (when Telegram WebApp not ready)
   if (!isReady) {
     return (
       <div className="p-6 space-y-4 max-w-md mx-auto">
@@ -82,7 +86,7 @@ export default function WebAppMainScreen() {
 
         {/* HEADER */}
         <header className="flex items-center justify-between p-4 bg-[#171322] border-b border-[#1F1A2E]">
-          <div className="p-2 rounded-lg hover:bg-[#2A243B]">?</div>
+          <div className="p-2 rounded-lg hover:bg-[#2A243B]">📁</div>
           <h1 className="text-xl font-bold text-[#FACC15]">VIVA</h1>
           <div className="px-3 py-1 bg-[#1A142B] rounded-full text-xs text-[#FACC15]">
             120 credits
@@ -150,7 +154,10 @@ export default function WebAppMainScreen() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Describe what you want to create..."
-                className="w-full h-32 p-4 bg-[#171322] rounded-xl border border-[#2B2342] focus:border-[#FACC15] outline-none resize-none shadow-lg"
+                className="
+                  w-full h-32 p-4 bg-[#171322] rounded-xl border border-[#2B2342]
+                  focus:border-[#FACC15] outline-none resize-none shadow-lg
+                "
               />
             </FadeIn>
           )}
@@ -160,7 +167,11 @@ export default function WebAppMainScreen() {
             <FadeIn delay={0.25}>
               <div
                 onClick={() => inputRef.current?.click()}
-                className="w-full p-6 border-2 border-dashed border-[#FACC15]/40 rounded-xl bg-[#171322] text-center cursor-pointer shadow-lg hover:border-[#FACC15]"
+                className="
+                  w-full p-6 border-2 border-dashed border-[#FACC15]/40 rounded-xl
+                  bg-[#171322] text-center cursor-pointer shadow-lg
+                  hover:border-[#FACC15]
+                "
               >
                 {preview ? (
                   <img src={preview} className="w-full rounded-lg shadow-md" />
@@ -198,8 +209,34 @@ export default function WebAppMainScreen() {
             </button>
           </FadeIn>
 
+          {/* INSPIRATION GRID */}
+          <FadeIn delay={0.35}>
+            <div>
+              <h3 className="text-[#FACC15] font-medium mb-3">
+                Inspiration for you
+              </h3>
+
+              <div className="grid grid-cols-2 gap-3">
+                {PRESET_EXAMPLES.map((preset, i) => (
+                  <InspirationCard
+                    key={preset.title}
+                    title={preset.title}
+                    image={preset.image}
+                    delay={0.05 * i}
+                    onClick={() => {
+                      if (currentTab.requiresText) {
+                        setPrompt(preset.prompt);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+
         </div>
       </div>
     </FadeIn>
   );
 }
+
