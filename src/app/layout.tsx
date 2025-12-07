@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'VIVA Photo Animator',
-  description: 'Animate your photos with AI',
+  description: 'Telegram Mini App for photo and video animation',
 };
 
 export default function RootLayout({
@@ -13,10 +13,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <div className="tg-container">
-          {children}
-        </div>
+      <body className="bg-black text-white">
+        {children}
       </body>
     </html>
   );
