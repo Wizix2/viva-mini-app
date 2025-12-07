@@ -18,11 +18,11 @@ export default function TgPage() {
   return (
     <div style={{ padding: 20 }}>
       <h1 style={{ fontSize: 22, marginBottom: 10 }}>
-        VIVA Photo Animator
+        VIVA Photo Animator — TG Mini App
       </h1>
 
       <p style={{ opacity: 0.8 }}>
-        This is your Telegram Mini App root page.
+        Telegram version successfully isolated.
       </p>
 
       <button
@@ -36,10 +36,11 @@ export default function TgPage() {
           fontWeight: "bold",
           width: "100%",
         }}
-        onClick={() => alert("Action works inside Telegram!")}
+        onClick={() => alert("Telegram works!")}
       >
-        Test Button
+        Test Telegram Button
       </button>
     </div>
   );
 }
+
