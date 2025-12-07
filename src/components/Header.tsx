@@ -1,19 +1,26 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useSidebar } from '@/contexts/SidebarContext';
 
 interface HeaderProps {
   credits?: number;
 }
 
 export default function Header({ credits = 100 }: HeaderProps) {
+  const { toggleSidebar } = useSidebar();
+
   return (
     <header className="tg-header">
-      <button className="tg-icon-button">
+      <motion.button 
+        className="tg-icon-button"
+        onClick={toggleSidebar}
+        whileTap={{ scale: 0.9 }}
+      >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z" fill="currentColor"/>
         </svg>
-      </button>
+      </motion.button>
       
       <div className="flex items-center gap-3">
         <button className="tg-icon-button">
