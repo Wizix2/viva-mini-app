@@ -1,24 +1,12 @@
-"use client";
-
-import { useEffect } from "react";
-import "./tg.css";
+export const metadata = {
+  title: "VIVA TG Mini App",
+};
 
 export default function TgLayout({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    const tg = (window as any).Telegram?.WebApp;
-
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-  }, []);
-
   return (
     <html lang="en">
-      <body>
-        <div className="tg-container">
-          {children}
-        </div>
+      <body style={{ background: "#0B0B0F", color: "white" }}>
+        {children}
       </body>
     </html>
   );
