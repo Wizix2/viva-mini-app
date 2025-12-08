@@ -14,28 +14,73 @@ export default function TgPage() {
     platform: null as string | null,
     initData: null as string | null,
   });
+  
+  const [deepDebug, setDeepDebug] = useState({
+    timestamp: null,
+    userAgent: null,
+    locationHref: null,
+    referrer: null,
+
+    tgObject: null,
+    tgWebApp: null,
+
+    initData: null,
+    initDataUnsafe: null,
+
+    platform: null,
+    version: null,
+    theme: null,
+
+    canExpand: null,
+    colorScheme: null,
+
+    startParam: null,
+  });
 
   useEffect(() => {
-    // защитимся от SSR
-    if (typeof window === "undefined") return;
-
     const w = window as any;
-    const telegram = w.Telegram;
-    const webApp = telegram?.WebApp;
+    
+    const result = {
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      locationHref: window.location.href,
+      referrer: document.referrer,
 
-    // обновляем debug-панель
+      tgObject: w.Telegram ?? null,
+      tgWebApp: w.Telegram?.WebApp ?? null,
+
+      initData: w.Telegram?.WebApp?.initData ?? null,
+      initDataUnsafe: w.Telegram?.WebApp?.initDataUnsafe ?? null,
+
+      platform: w.Telegram?.WebApp?.platform ?? null,
+      version: w.Telegram?.WebApp?.version ?? null,
+      theme: w.Telegram?.WebApp?.themeParams ?? null,
+
+      canExpand: w.Telegram?.WebApp?.isExpanded ?? null,
+      colorScheme: w.Telegram?.WebApp?.colorScheme ?? null,
+
+      startParam: w.Telegram?.WebApp?.initDataUnsafe?.start_param ?? null,
+    };
+
+    setDeepDebug(result);
+    
+    // Обновляем также старую debug-панель для совместимости
     setDebugInfo({
       hasWindow: true,
-      hasTelegram: !!telegram,
-      hasWebApp: !!webApp,
-      platform: webApp?.platform ?? null,
-      initData: webApp?.initData ?? null,
+      hasTelegram: !!w.Telegram,
+      hasWebApp: !!w.Telegram?.WebApp,
+      platform: w.Telegram?.WebApp?.platform ?? null,
+      initData: w.Telegram?.WebApp?.initData ?? null,
     });
 
-    // аккуратная инициализация WebApp API
-    webApp?.ready?.();
-    webApp?.expand?.();
-  }, [tg]);
+    // попытка инициализации WebApp API
+    try {
+      w.Telegram?.WebApp?.ready();
+      w.Telegram?.WebApp?.expand();
+    } catch (e) {
+      console.error("WebApp init error:", e);
+    }
+  }, []);
 
   return (
     <div style={{
@@ -85,6 +130,22 @@ hasWebApp: ${String(debugInfo.hasWebApp)}
 platform: ${debugInfo.platform ?? "null"}
 initData: ${debugInfo.initData ?? "null"}`}
         </pre>
+      </div>
+      
+      <div style={{
+        background: "#111",
+        padding: 16,
+        borderRadius: 10,
+        marginTop: 20,
+        color: "#0f0",
+        fontSize: 12,
+        whiteSpace: "pre-wrap",
+        textAlign: "left",
+        border: "1px solid #333"
+      }}>
+        <b>DEEP DEBUG • RAW Telegram WebApp State</b>
+        <br /><br />
+        {JSON.stringify(deepDebug, null, 2)}
       </div>
     </div>
   );
