@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 export default function TgLayout({ children }) {
   return (
     <div style={{
