@@ -1,9 +1,5 @@
 export const dynamic = "force-dynamic";
 
-export async function action() {
-  "use server";
-}
-
 export default function TgLayout({ children }) {
   return (
     <div style={{
@@ -15,3 +11,4 @@ export default function TgLayout({ children }) {
     </div>
   );
 }
+
