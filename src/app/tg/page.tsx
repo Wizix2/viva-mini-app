@@ -1,3 +1,5 @@
+"use client";
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
@@ -9,13 +11,18 @@ export const headers = {
   Expires: "0",
 };
 
-"use client";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useTelegram from "@/hooks/useTelegram";
 
 export default function TgPage() {
   const tg = useTelegram();
+  const [debugInfo, setDebugInfo] = useState({
+    hasWindow: false,
+    hasTelegram: false,
+    hasWebApp: false,
+    platform: null as string | null,
+    initData: null as string | null,
+  });
 
   if (typeof window !== "undefined") {
     window.Telegram = window.Telegram || {};
@@ -23,8 +30,25 @@ export default function TgPage() {
   }
 
   useEffect(() => {
-    tg?.ready?.();
-    tg?.expand?.();
+    // защитимся от SSR
+    if (typeof window === "undefined") return;
+
+    const w = window as any;
+    const telegram = w.Telegram;
+    const webApp = telegram?.WebApp;
+
+    // обновляем debug-панель
+    setDebugInfo({
+      hasWindow: true,
+      hasTelegram: !!telegram,
+      hasWebApp: !!webApp,
+      platform: webApp?.platform ?? null,
+      initData: webApp?.initData ?? null,
+    });
+
+    // аккуратная инициализация WebApp API
+    webApp?.ready?.();
+    webApp?.expand?.();
   }, [tg]);
 
   return (
@@ -48,6 +72,34 @@ export default function TgPage() {
       }}>
         Telegram WebApp: {tg ? "Connected" : "Loading..."}
       </p>
+      
+      {/* DEBUG PANEL – visible только тебе, помогает понять что видит Telegram */}
+      <div
+        style={{
+          marginTop: 24,
+          padding: 12,
+          borderRadius: 8,
+          background: "rgba(255,255,255,0.05)",
+          fontSize: 11,
+          textAlign: "left",
+          wordBreak: "break-all",
+        }}
+      >
+        <div style={{ marginBottom: 6, opacity: 0.7 }}>DEBUG • Telegram WebApp state</div>
+        <pre
+          style={{
+            whiteSpace: "pre-wrap",
+            margin: 0,
+            fontFamily: "monospace",
+          }}
+        >
+{`hasWindow: ${String(debugInfo.hasWindow)}
+hasTelegram: ${String(debugInfo.hasTelegram)}
+hasWebApp: ${String(debugInfo.hasWebApp)}
+platform: ${debugInfo.platform ?? "null"}
+initData: ${debugInfo.initData ?? "null"}`}
+        </pre>
+      </div>
     </div>
   );
 }
