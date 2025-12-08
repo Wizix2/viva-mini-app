@@ -13,6 +13,7 @@ import TextToVideoForm from '@/components/tg/forms/TextToVideoForm';
 import ImageToVideoForm from '@/components/tg/forms/ImageToVideoForm';
 import GenerationHistory from '@/components/tg/GenerationHistory';
 import SidebarWrapper from '@/components/tg/SidebarWrapper';
+import DebugPanel from '@/components/tg/DebugPanel';
 import { MainMode, SubMode } from '@/types/modes';
 import { HistoryItem } from '@/types/history';
 
@@ -179,6 +180,9 @@ export default function TgPage() {
             <GenerationHistory items={history} />
           </div>
         </motion.div>
+        
+        {/* Remove when finished debugging */}
+        <DebugPanel tg={tg} />
       </SidebarWrapper>
     </SidebarProvider>
   );
