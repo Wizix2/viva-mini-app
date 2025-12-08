@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function useTelegram() {
   const [tg, setTg] = useState<any>(null);
@@ -10,13 +10,14 @@ export default function useTelegram() {
 
     function init() {
       const webapp = (window as any).Telegram?.WebApp;
-      if (webapp) setTg(webapp);
+      if (webapp) {
+        setTg(webapp);
+      } else {
+        setTimeout(init, 50);
+      }
     }
 
     init();
-    const timeout = setTimeout(init, 50);
-
-    return () => clearTimeout(timeout);
   }, []);
 
   return tg;

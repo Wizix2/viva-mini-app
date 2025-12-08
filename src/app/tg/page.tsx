@@ -131,8 +131,8 @@ export default function TgPage() {
   useEffect(() => {
     if (!tg) return;
 
-    tg.ready?.();
-    tg.expand?.();
+    tg?.ready?.();
+    tg?.expand?.();
   }, [tg]);
   
   return (
