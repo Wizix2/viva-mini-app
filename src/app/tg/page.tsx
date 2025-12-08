@@ -2,11 +2,6 @@
 
 export const dynamic = "force-dynamic";
 
-// ⬅️ ДОБАВЛЯЕМ server action
-export async function action() {
-  "use server";
-}
-
 import { useEffect } from "react";
 import useTelegram from "@/hooks/useTelegram";
 
@@ -19,19 +14,23 @@ export default function TgPage() {
   }, [tg]);
 
   return (
-    <div style={{ padding: 24, textAlign: "center" }}>
-      <h1>VIVA Mini App — Loaded Successfully</h1>
+    <div style={{
+      padding: 24,
+      textAlign: "center",
+      marginTop: 80,
+    }}>
+      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>
+        VIVA Mini App — Loaded Successfully
+      </h1>
 
-      <p
-        style={{
-          marginTop: 16,
-          padding: "12px 18px",
-          background: "#FFD400",
-          color: "#000",
-          borderRadius: 6,
-          fontWeight: "bold",
-        }}
-      >
+      <p style={{
+        marginTop: 20,
+        padding: "12px 20px",
+        background: "#FFD400",
+        color: "#000",
+        borderRadius: 6,
+        fontWeight: "bold"
+      }}>
         Telegram WebApp: {tg ? "Connected" : "Loading..."}
       </p>
     </div>
