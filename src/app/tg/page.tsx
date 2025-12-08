@@ -5,43 +5,33 @@ import useTelegram from "@/hooks/useTelegram";
 
 export default function TgPage() {
   const tg = useTelegram();
-  
+
   useEffect(() => {
-    if (!tg) return;
-    
-    // Initialize Telegram WebApp
     tg?.ready?.();
     tg?.expand?.();
   }, [tg]);
-  
+
   return (
     <div style={{
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      textAlign: "center"
+      padding: 24,
+      textAlign: "center",
+      marginTop: 80
     }}>
-      <h1 style={{
-        fontSize: "24px",
-        fontWeight: "bold",
-        marginBottom: "16px"
-      }}>
+      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>
         VIVA Mini App — Loaded Successfully
       </h1>
-      
-      <div style={{
-        marginTop: "20px",
-        padding: "12px 24px",
+
+      <p style={{
+        marginTop: 20,
+        padding: "12px 20px",
+        borderRadius: 6,
         background: "#FFD400",
         color: "#000",
-        borderRadius: "8px",
+        display: "inline-block",
         fontWeight: "bold"
       }}>
-        Telegram WebApp {tg ? "Connected" : "Loading..."}
-      </div>
+        Telegram WebApp: {tg ? "Connected" : "Loading..."}
+      </p>
     </div>
   );
 }

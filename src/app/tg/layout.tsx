@@ -1,13 +1,11 @@
 "use client";
 
-export default function TgLayout({ children }: { children: React.ReactNode }) {
+export default function TgLayout({ children }) {
   return (
-    <div style={{ 
-      background: "#000", 
+    <div style={{
+      background: "#000",
       color: "#fff",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column"
+      minHeight: "100vh"
     }}>
       {children}
     </div>
