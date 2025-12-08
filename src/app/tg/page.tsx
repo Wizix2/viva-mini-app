@@ -1,15 +1,6 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-export const runtime = "edge";
-
-export const headers = {
-  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-  Pragma: "no-cache",
-  Expires: "0",
-};
 
 import { useEffect, useState } from "react";
 import useTelegram from "@/hooks/useTelegram";
@@ -23,11 +14,6 @@ export default function TgPage() {
     platform: null as string | null,
     initData: null as string | null,
   });
-
-  if (typeof window !== "undefined") {
-    window.Telegram = window.Telegram || {};
-    window.Telegram.WebApp = window.Telegram.WebApp || {};
-  }
 
   useEffect(() => {
     // защитимся от SSR
