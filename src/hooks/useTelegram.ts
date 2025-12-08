@@ -8,16 +8,20 @@ export default function useTelegram() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    function init() {
+    function tryInit(attempt = 0) {
       const webapp = (window as any).Telegram?.WebApp;
       if (webapp) {
         setTg(webapp);
-      } else {
-        setTimeout(init, 50);
+        return;
+      }
+
+      // Retry because iOS initializes WebApp with delay
+      if (attempt < 40) {
+        setTimeout(() => tryInit(attempt + 1), 50);
       }
     }
 
-    init();
+    tryInit();
   }, []);
 
   return tg;

@@ -1,5 +1,5 @@
 "use client";
 
-export default function Tglayout({ children }) {
+export default function TgLayout({ children }) {
   return <>{children}</>;
 }
