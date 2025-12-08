@@ -22,10 +22,7 @@ export default function TgPage() {
   if (!tg) {
     return (
       <div className="min-h-screen bg-dark text-white flex items-center justify-center p-4">
-        <div className="text-center">
-          <h1 className="text-xl font-bold mb-2">VIVA Mini App</h1>
-          <p>Telegram WebApp не обнаружен. Откройте приложение через Telegram.</p>
-        </div>
+        <p>Loading Telegram...</p>
       </div>
     );
   }
@@ -133,9 +130,9 @@ export default function TgPage() {
   // Инициализация Telegram WebApp
   useEffect(() => {
     if (!tg) return;
-    
-    tg.ready();
-    tg.expand();
+
+    tg.ready?.();
+    tg.expand?.();
   }, [tg]);
   
   return (
